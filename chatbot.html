@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Chatbot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cossette+Titre:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family:url('https://fonts.googleapis.com/css2?family=Cossette+Titre:wght@400;700&display=swap');
+      background: linear-gradient(135deg, #896dd7, #ad94e4);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      color: #fff;
+    }
+     .navbar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.7rem 2rem;
+      background: rgba(30, 24, 58, 0.92);
+      position: sticky;
+      top: 0;
+      z-index: 99;
+    }
+    .navbar .logo {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.6rem;
+      color: #fff;
+    }
+    .logo-icon {
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      margin-right: 8px;
+      background: url('images/logo.png') no-repeat center/contain;
+    }
+    .navbar .nav-links {
+      display: flex;
+      gap: 1.2rem;
+    }
+    .navbar .nav-links a, .navbar .lang-switch, .navbar .login-signup {
+      color: #e4d9d9;
+      font-size: 1.08rem;
+      padding: 0.5rem 1rem;
+      border-radius: 15px;
+      transition: background 0.23s;
+    }
+    .navbar .nav-links a:hover {
+      background: #7855db;
+      color: #fff;
+    }
+    .lang-switch {
+      background: transparent;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1.08rem;
+    }
+
+    .page-header {
+      color: #000;
+      text-align: center;
+      padding: 20px;
+      width: 100%;
+    }
+    .page-header h1 {
+      margin: 0;
+      font-size: 50px;
+    }
+    .page-header p {
+      margin: 5px 0 0;
+      font-size: 26px;
+      opacity: 0.9;
+    }
+
+    .chat-container {
+      width: 900px;
+      height: 600px;
+      background: rgba(230, 214, 214, 0.08);
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      background: #320397;
+      padding: 14px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .chat-box {
+      flex: 1;
+      padding: 12px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .message {
+      padding: 10px 14px;
+      border-radius: 14px;
+      max-width: 75%;
+      font-size: 20px;
+      line-height: 1.4;
+      white-space: pre-line;
+      color: #790471;
+    }
+
+    .bot {
+      background: rgba(11, 82, 189, 0.15);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    .user {
+      background: rgba(11, 82, 189, 0.15);
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 10px;
+      background: rgba(255,255,255,0.05);
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .chat-input button {
+      background: #4f08e8;
+      color: #fff;
+      border: none;
+      padding: 10px 14px;
+      margin-left: 8px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .chat-input button:hover {
+      background: #9b6dff;
+    }
+
+   footer {
+      height: auto;
+      width: 100%;
+      background: rgba(120, 80, 240, 0.85);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
+      color: #f0e9ff;
+      margin-top: 60px;
+      padding: 40px 10vw;
+      box-sizing: border-box;
+      font-size: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 30px;
+    }
+    footer section {
+      flex: 1 1 280px;
+      min-width: 220px;
+    }
+    footer h3 {
+      margin-top: 0;
+      color: #d6caff;
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 12px;
+      letter-spacing: 0.03em;
+    }
+    footer p, footer li, footer a {
+      color: #e3dbff;
+      line-height: 1.5;
+    }
+    footer ul {
+      padding-left: 1.2em;
+      margin: 0;
+      list-style-type: disc;
+    }
+    footer ul li {
+      margin-bottom: 8px;
+    }
+    footer a {
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+    footer a:hover {
+      color: #fff;
+    }
+    .footer-bottom {
+      width: 100%;
+      text-align: center;
+      padding: 18px 0 10px 0;
+      font-size: 13px;
+      color: #000000;
+      background: rgba(115, 83, 210, 0.85);
+      box-shadow: inset 0 -1px 4px rgba(0,0,0,0.2);
+      letter-spacing: 0.05em;
+      margin-top: 30px;
+    }
+    /* Responsive */
+    @media (max-width: 850px) {
+      #career-path {
+        width: 90%;
+      }
+      footer {
+        padding: 30px 5vw;
+        font-size: 14px;
+      }
+    }
+    @media (max-width: 480px) {
+      footer {
+        flex-direction: column;
+        gap: 22px;
+      }
+      footer section {
+        min-width: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+  <div class="logo">
+    <span class="logo-icon"></span>
+    Skillin
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="student.html">Student</a>
+    <a href="employers.html">Employers</a>
+    <a href="ai.html">AI</a>
+    <a href="university.html">University</a>
+    <a href="admin.html">Admin/Govt</a>
+  </div>
+  <button class="lang-switch">
+    
+  </button>
+</nav>
+  <div class="page-header">
+    <h1>🤖 SkillinBot</h1>
+    <p>Your AI Career Mentor – Ask about skills, internships, or future jobs</p>
+  </div>
+
+  <div class="chat-container">
+    <div class="chat-header">🎓 SkillinBot</div>
+    <div class="chat-box" id="chatBox">
+      <div class="message bot">
+        Hello 👋 Welcome to Skillin. I am your AI Career Assistant.
+        Ask me in English or Hinglish about internships, skills, careers,
+        or sectors (IT, Finance, Agriculture, Healthcare, Education etc).
+      </div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Type your question... (Press Enter)">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <footer>
+    <section>
+      <h3>About Us</h3>
+      <p>This portal utilizes AI technology to guide students toward promising career paths and internship opportunities, empowering future professionals to make informed decisions.</p>
+    </section>
+    <section>
+      <h3>Features</h3>
+      <ul>
+        <li><a href="Ai.html">Ai</a></li>
+        <li><a href="cpr.html">Career Path Recommendation</a></li>
+        <li><a href="matchup.html">Matching Up</a></li>
+        <li><a href="skillgap.html">Skill Gap Advice</a></li>
+        <li><a href="chatbot.html">Chatbot Support</a></li>
+      </ul>
+    </section>
+    <section>
+      <h3>Contact</h3>
+      <p>Email: <a href="skillin.portal@gmail.com">skillin.portal@gmail.com</a></p>
+    </section>
+     <div class="footer-bottom">
+    &copy; 2025 SkillinBot | Powered by PM Internship Smart Allocation System
+  </div>
+  </footer>
+
+  <script>
+    const chatBox = document.getElementById("chatBox");
+    const input = document.getElementById("userInput");
+
+    // Sample job + internship dataset
+    // Sample job + internship dataset
+// Sample job + internship dataset
+const sectorData = {
+  IT: [
+   "🎓 Internship: DevOps Intern (Docker, Jenkins, AWS) - Hyderabad",
+                    "🎓 Internship: Data Analyst Intern (Python, SQL, Excel) - Mumbai",
+                    "🎓 Internship: UI/UX Designer Intern (Figma, Adobe XD) - Bengaluru",
+                    "🎓 Internship: Java Developer Intern (Core Java, Spring Boot) - Chennai",
+                    "🎓 Internship: Web Development Intern (HTML, CSS, JavaScript) - Pune",
+                    "🎓 Internship: Machine Learning Intern (Python, SciKit-Learn) - Delhi",
+                    "🎓 Internship: Cybersecurity Intern (Penetration Testing) - Noida",
+                    "🎓 Internship: Blockchain Intern (Solidity) - Bengaluru",
+                    "🎓 Internship: Cloud Computing Intern (AWS) - Gurugram",
+                    "🎓 Internship: Technical Support Intern (IT Helpdesk) - Mumbai",
+                    "💼 Job: Frontend Developer (React, CSS, JavaScript) - Bengaluru",
+                    "💼 Job: Backend Developer (Java, Spring, MySQL) - Pune",
+                    "💼 Job: Cybersecurity Analyst (Network Security, Ethical Hacking) - Noida",
+                    "💼 Job: Blockchain Developer (Solidity, Ethereum) - Hyderabad",
+                    "💼 Job: Cloud Engineer (AWS, Azure, GCP) - Gurugram",
+                    "💼 Job: AI/ML Engineer (Python, TensorFlow, PyTorch) - Chennai",
+                    "💼 Job: Data Scientist (R, Python, SQL) - Mumbai",
+                    "💼 Job: Full-Stack Developer (MERN/MEAN Stack) - Delhi",
+                    "💼 Job: Mobile App Developer (Android/iOS) - Hyderabad",
+                    "💼 Job: Game Developer (Unity, C++) - Bengaluru",
+                    "💼 Job: DevOps Engineer (CI/CD, Kubernetes) - Pune",
+                    "💼 Job: UI/UX Designer (Figma, Sketch, Adobe XD) - Bengaluru",
+                    "💼 Job: Embedded Systems Engineer (C, Microcontrollers) - Noida",
+                    "💼 Job: Network Engineer (Cisco, Juniper) - Chennai",
+                    "💼 Job: Solutions Architect (System Design) - Mumbai",
+                    "💼 Job: Business Analyst (Process Mapping, Requirements Gathering) - Delhi",
+                    "💼 Job: Database Administrator (Oracle, SQL Server) - Pune",
+                    "💼 Job: QA Tester (Manual/Automation Testing) - Bengaluru",
+                    "💼 Job: Technical Writer (Documentation) - Hyderabad",
+                    "💼 Job: IT Support Specialist (Troubleshooting) - Kolkata",
+                   
+  ],
+  Finance: [
+  "🎓 Internship: Investment Research Intern (Excel, Data Analysis) - Delhi",
+                    "🎓 Internship: Equity Research Intern (Financial Reports) - Bengaluru",
+                    "🎓 Internship: Audit Intern (Accounting, Tally) - Mumbai",
+                    "🎓 Internship: Financial Planning Intern (Budgeting, Forecasting) - Kolkata",
+                    "🎓 Internship: Treasury Intern (Cash Management) - Pune",
+                    "🎓 Internship: Credit Analyst Intern (Loan Underwriting) - Gurugram",
+                    "🎓 Internship: Risk Management Intern (Risk Assessment) - Hyderabad",
+                    "🎓 Internship: Accounting Intern (Bookkeeping, GST) - Ahmedabad",
+                    "💼 Job: Financial Analyst (Risk Analysis, Financial Modeling) - Gurugram",
+                    "💼 Job: Investment Banker (Corporate Finance, M&A) - Mumbai",
+                    "💼 Job: Chartered Accountant (Taxation, Auditing) - Delhi",
+                    "💼 Job: Equity Research Analyst (Market Analysis) - Bengaluru",
+                    "💼 Job: Credit Manager (Loan Processing, Risk Assessment) - Kolkata",
+                    "💼 Job: Wealth Manager (Portfolio Management) - Ahmedabad",
+                    "💼 Job: Actuary (Statistical Analysis) - Pune",
+                    "💼 Job: Compliance Officer (Regulatory Audits) - Chennai",
+                    "💼 Job: Financial Planner (Personal Finance, Investment) - Delhi",
+                    "💼 Job: Treasury Manager (Cash Flow Management) - Mumbai",
+                    "💼 Job: Budget Analyst (Financial Reporting) - Bengaluru",
+                    "💼 Job: Risk Analyst (Market Risk, Credit Risk) - Hyderabad",
+                    "💼 Job: Stock Broker (Trading, Investment Advice) - Mumbai",
+                    "💼 Job: Forensic Accountant (Financial Crime Investigation) - Pune",
+                    "💼 Job: Commercial Banker (Business Loans) - Kolkata",
+                    
+                
+  ],
+  Agriculture: [
+   "🎓 Internship: Farm Data Analyst (Excel, Soil Testing) - Lucknow",
+    "💼 Job: AgriTech Specialist (IoT, Crop Management) - Patna",
+   
+  ],
+  Healthcare: [
+   "🎓 Internship: Clinical Research Intern (Biology, Lab Testing) - Delhi",
+                    "🎓 Internship: Healthcare IT Intern (EMR Systems, Health Informatics) - Mumbai",
+                    "🎓 Internship: Public Health Intern (Surveying, Data Analysis) - Kolkata",
+                    "🎓 Internship: Hospital Management Intern (Operations, Administration) - Pune",
+                    "🎓 Internship: Pharmacy Intern (Drug Dispensing) - Bengaluru",
+                    "🎓 Internship: Medical Billing Intern (Coding, Claims Processing) - Hyderabad",
+                    "🎓 Internship: Nursing Intern (Patient Care) - Jaipur",
+                    "🎓 Internship: Lab Technician Intern (Diagnostic Procedures) - Chennai",
+   "💼 Job: Healthcare Data Specialist (Epidemiology, SQL) - Hyderabad",
+                    "💼 Job: Hospital Administrator (Operations, Patient Care) - Chennai",
+                    "💼 Job: Public Health Researcher (Data Collection, Biostatistics) - Pune",
+                    "💼 Job: Clinical Research Associate (Clinical Trials, GCP) - Bengaluru",
+                    "💼 Job: Medical Coder (ICD-10, CPT) - Mumbai",
+                    "💼 Job: Pharmacist (Drug Management, Patient Counseling) - Delhi",
+                    "💼 Job: Radiologist (Medical Imaging) - Jaipur",
+                    "💼 Job: Physical Therapist (Rehabilitation) - Lucknow",
+                    "💼 Job: Nursing Officer (Patient Care, Critical Care) - Mumbai",
+                    "💼 Job: Lab Technician (Blood Testing, Diagnostics) - Kolkata",
+                    "💼 Job: Dietitian (Nutritional Planning) - Chennai",
+                    "💼 Job: Medical Writer (Clinical Documentation) - Bengaluru",
+                    "💼 Job: Health Informatics Specialist (EHR) - Hyderabad",
+                    "💼 Job: Biomedical Engineer (Medical Devices) - Delhi",
+                    "💼 Job: Occupational Therapist (Rehabilitation) - Pune",
+                   
+                
+  ],
+  Education: [
+   "🎓 Internship: Teaching Assistant (Subject Knowledge, Communication) - Bhopal",
+                    "🎓 Internship: Curriculum Development Intern (Lesson Planning, Research) - Hyderabad",
+                    "🎓 Internship: EdTech Intern (Platform Testing, User Support) - Bengaluru",
+                    "🎓 Internship: Content Writing Intern (Educational Content) - Pune",
+                    "🎓 Internship: Admissions Intern (Student Counseling) - Delhi",
+                    "🎓 Internship: Educational Research Intern (Data Analysis) - Chennai",
+                    "🎓 Internship: E-learning Intern (Course Development) - Mumbai",
+                    "🎓 Internship: School Administration Intern (Office Management) - Kolkata",
+                
+    "💼 Job: EdTech Content Creator (Subject Matter, Video Editing) - Bengaluru",
+                    "💼 Job: School IT Coordinator (Networking, Troubleshooting) - Lucknow",
+                    "💼 Job: Career Counselor (Psychology, Mentoring) - Delhi",
+                    "💼 Job: E-learning Specialist (LMS, Instructional Design) - Pune",
+                    "💼 Job: University Admissions Officer (Student Recruitment) - Mumbai",
+                    "💼 Job: Academic Researcher (Research Papers, Data Analysis) - Chennai",
+                    "💼 Job: Special Education Teacher (Adaptive Teaching) - Kolkata",
+                    "💼 Job: School Principal (Administration, Leadership) - Jaipur",
+                    "💼 Job: Corporate Trainer (Skill Development) - Gurugram",
+                    "💼 Job: Curriculum Developer (Lesson Planning) - Hyderabad",
+                    "💼 Job: Librarian (Information Management) - Pune",
+                    "💼 Job: Education Consultant (School Improvement) - Mumbai",
+                    "💼 Job: Vocational Trainer (Skill-based Training) - Noida",
+                   
+  ],
+  Engineering: [
+  "🎓 Internship: Electrical Engineering Intern (Circuit Design, MATLAB) - Pune",
+                    "🎓 Internship: Chemical Engineering Intern (Process Optimization, Lab Work) - Vadodara",
+                    "🎓 Internship: Civil Engineering Intern (Site Surveying, Reports) - Ahmedabad",
+                    "🎓 Internship: Mechanical Engineering Intern (CAD, Design) - Chennai",
+                    "🎓 Internship: Robotics Intern (Automation) - Bengaluru",
+                    "🎓 Internship: Environmental Engineering Intern (Sustainability Projects) - Delhi",
+                    "🎓 Internship: Aeronautical Engineering Intern (Aircraft Systems) - Mumbai",
+                    "🎓 Internship: Industrial Engineering Intern (Process Analysis) - Pune",
+    "💼 Job: Mechanical Engineer (AutoCAD, SolidWorks) - Chennai",
+                    "💼 Job: Civil Site Engineer (Project Management, Construction) - Ahmedabad",
+                    "💼 Job: Electrical Design Engineer (Circuitry, CAD) - Pune",
+                    "💼 Job: Chemical Engineer (Process Optimization) - Vadodara",
+                    "💼 Job: Aeronautical Engineer (Aircraft Design) - Bengaluru",
+                    "💼 Job: Marine Engineer (Shipbuilding) - Mumbai",
+                    "💼 Job: Petroleum Engineer (Drilling Operations) - Gujarat",
+                    "💼 Job: Environmental Engineer (Waste Management) - Delhi",
+                    "💼 Job: Structural Engineer (Building Design) - Kolkata",
+                    "💼 Job: Industrial Engineer (Process Improvement) - Pune",
+                    "💼 Job: Production Engineer (Lean Manufacturing) - Faridabad",
+                    "💼 Job: Automotive Engineer (Vehicle Design) - Chennai",
+                    "💼 Job: Mechatronics Engineer (Robotics) - Bengaluru",
+                    "💼 Job: Biomedical Engineer (Medical Devices) - Hyderabad",
+                    "💼 Job: Aerospace Engineer (Spacecraft Design) - Bengaluru",
+                    
+                
+  ],
+  Marketing: [ 
+   "🎓 Internship: Social Media Marketing Intern (Content, Analytics) - Bengaluru",
+                    "🎓 Internship: Market Research Intern (Consumer Behavior, Data Analysis) - Pune",
+                    "🎓 Internship: Content Writing Intern (Blogging, Copywriting) - Mumbai",
+                    "🎓 Internship: SEO Intern (Keyword Research, On-page SEO) - Delhi",
+                    "🎓 Internship: Digital Marketing Intern (PPC, Social Media Ads) - Gurugram",
+                    "🎓 Internship: Brand Management Intern (Market Analysis) - Chennai",
+                    "🎓 Internship: Public Relations Intern (Press Releases, Media Kits) - Noida",
+                    "🎓 Internship: Events Intern (Coordination, Logistics) - Hyderabad",
+     "💼 Job: Digital Marketing Executive (SEO, Google Ads) - Gurugram",
+                    "💼 Job: Brand Manager (Market Research, Campaign Planning) - Mumbai",
+                    "💼 Job: Content Writer (Copywriting, SEO) - Bengaluru",
+                    "💼 Job: Social Media Manager (Content Strategy, Analytics) - Delhi",
+                    "💼 Job: Public Relations Specialist (Media Relations) - Noida",
+                    "💼 Job: Market Research Analyst (Consumer Behavior) - Pune",
+                    "💼 Job: SEO Specialist (Keyword Research, Link Building) - Chennai",
+                    "💼 Job: SEM Specialist (Paid Search Campaigns) - Hyderabad",
+                    "💼 Job: Email Marketing Specialist (Campaign Management) - Mumbai",
+                    "💼 Job: Product Marketing Manager (Go-to-Market Strategy) - Bengaluru",
+                    "💼 Job: Marketing Communications Manager (Internal/External Comms) - Pune",
+                    "💼 Job: Events Manager (Event Planning, Promotion) - Delhi",
+                    "💼 Job: Corporate Communications Officer (Press Releases) - Kolkata",
+                    "💼 Job: Visual Merchandiser (Store Layout, Displays) - Ahmedabad",
+                    "💼 Job: Affiliate Marketing Manager (Partnerships) - Gurugram",
+                   
+  ],
+  Law: [
+"🎓 Internship: Legal Intern (Case Research, Court Work) - Lucknow",
+"🎓 Internship: Corporate Law Intern (Drafting Agreements, Due Diligence) - Bengaluru",
+"🎓 Internship: Litigation Intern (Client Briefing, Court Filing) - Delhi",
+"🎓 Internship: Arbitration Intern (Dispute Resolution, Hearings) - Pune",
+"🎓 Internship: Intellectual Property Intern (Copyright, Trademark Search) - Chennai",
+"🎓 Internship: Human Rights Intern (Legal Aid, Awareness Drives) - Kolkata",
+"🎓 Internship: NGO Legal Intern (Policy, Documentation) - Jaipur",
+"🎓 Internship: Legal Research Intern (Case Analysis, Journals) - Hyderabad",
+"🎓 Internship: Company Secretary Intern (Compliance, MCA Filings) - Gurugram",
+"🎓 Internship: Policy Research Intern (Law Commission, Draft Bills) - Delhi",
+"🎓 Internship: Tax Law Intern (GST, Income Tax Filings) - Mumbai",
+"🎓 Internship: Cyber Law Intern (Data Protection, IT Act) - Bengaluru",
+"🎓 Internship: Media Law Intern (Defamation, Broadcasting Rules) - Noida",
+"🎓 Internship: Banking Law Intern (Loan Processing, Legal Notices) - Kolkata",
+"🎓 Internship: Constitutional Law Intern (Supreme Court, Fundamental Rights) - Delhi",
+"🎓 Internship: Criminal Law Intern (FIR Drafting, Bail Applications) - Lucknow",
+"🎓 Internship: Environmental Law Intern (Sustainability, NGT Cases) - Pune",
+"🎓 Internship: International Law Intern (Treaties, Arbitration) - New Delhi",
+"🎓 Internship: Labor Law Intern (Trade Unions, Industrial Disputes) - Surat",
+"🎓 Internship: Real Estate Law Intern (Property Disputes, Drafting) - Ahmedabad",
+"🎓 Internship: Family Law Intern (Divorce, Adoption Cases) - Jaipur",
+"🎓 Internship: Child Rights Intern (Juvenile Justice, Advocacy) - Chennai",
+"🎓 Internship: Prison Reform Intern (Policy, Legal Aid to Inmates) - Bhopal",
+"🎓 Internship: RTI Law Intern (Applications, Appeals) - Lucknow",
+"🎓 Internship: Election Law Intern (ECI Guidelines, PIL Drafting) - Delhi",
+"🎓 Internship: Maritime Law Intern (Shipping Contracts, International Rules) - Kochi",
+"🎓 Internship: Sports Law Intern (Contracts, Arbitration) - Bengaluru",
+"🎓 Internship: Media Policy Intern (Broadcast Regulation, OTT Laws) - Mumbai",
+"🎓 Internship: Public International Law Intern (UN Treaties, Global Regulations) - Delhi NCR",
+"🎓 Internship: Alternate Dispute Resolution Intern (Mediation, Conciliation) - Chandigarh",
+"🎓 Internship: Healthcare Law Intern (Medical Negligence, Regulations) - Hyderabad",
+"🎓 Internship: Consumer Law Intern (Grievance Redressal, Forums) - Lucknow",
+"🎓 Internship: Start-up Law Intern (Funding Agreements, Founders’ Contracts) - Bengaluru",
+"🎓 Internship: Data Protection Intern (Privacy Policies, GDPR) - Gurugram",
+"🎓 Internship: Anti-corruption Law Intern (Investigations, Legal Research) - Delhi",
+    "💼 Job: Legal Associate (Corporate Law, Drafting) - Delhi",
+"💼 Job: Litigation Lawyer (Civil, Criminal Practice) - Mumbai",
+"💼 Job: Corporate Counsel (M&A, Compliance) - Bengaluru",
+"💼 Job: Contract Manager (Negotiation, Review) - Hyderabad",
+"💼 Job: Intellectual Property Attorney (Trademarks, Patents) - Chennai",
+"💼 Job: Company Secretary (Legal Compliance, ROC Filings) - Kolkata",
+"💼 Job: Compliance Officer (Corporate Governance, Audits) - Pune",
+"💼 Job: Arbitration Specialist (Dispute Resolution, Mediation) - Delhi NCR",
+"💼 Job: Taxation Lawyer (Direct & Indirect Tax) - Ahmedabad",
+"💼 Job: Human Rights Lawyer (Advocacy, Legal Aid) - Lucknow",
+"💼 Job: Policy Advisor (Legal Drafting, Government Affairs) - Chandigarh",
+"💼 Job: Legal Analyst (Contract Analysis, Research) - Jaipur",
+"💼 Job: Cyber Law Expert (Data Privacy, IT Laws) - Gurugram",
+"💼 Job: Banking & Finance Lawyer (Loan Agreements, RBI Guidelines) - Mumbai",
+"💼 Job: International Trade Lawyer (WTO, Cross-border Regulations) - New Delhi",
+"💼 Job: Litigation Lawyer (Civil, Criminal Practice) - Mumbai",
+"💼 Job: Corporate Counsel (M&A, Compliance) - Bengaluru",
+"💼 Job: Contract Manager (Negotiation, Review) - Hyderabad",
+"💼 Job: Intellectual Property Attorney (Trademarks, Patents) - Chennai",
+"💼 Job: Company Secretary (Legal Compliance, ROC Filings) - Kolkata",
+"💼 Job: Compliance Officer (Corporate Governance, Audits) - Pune",
+"💼 Job: Arbitration Specialist (Dispute Resolution, Mediation) - Delhi NCR",
+"💼 Job: Taxation Lawyer (Direct & Indirect Tax) - Ahmedabad",
+"💼 Job: Human Rights Lawyer (Advocacy, Legal Aid) - Lucknow",
+"💼 Job: Policy Advisor (Legal Drafting, Government Affairs) - Chandigarh",
+"💼 Job: Legal Analyst (Contract Analysis, Research) - Jaipur",
+"💼 Job: Cyber Law Expert (Data Privacy, IT Laws) - Gurugram",
+"💼 Job: Banking & Finance Lawyer (Loan Agreements, RBI Guidelines) - Mumbai",
+"💼 Job: International Trade Lawyer (WTO, Cross-border Regulations) - New Delhi"
+
+  ],
+  ArtsDesign: [
+    "🎓 Internship: UI/UX Design Intern (Figma, Prototyping) - Hyderabad",
+"🎓 Internship: Graphic Design Intern (Branding, Posters) - Delhi",
+"🎓 Internship: Visual Design Intern (Illustrator, Layouts) - Mumbai",
+"🎓 Internship: Fashion Design Intern (Trends, Pattern Making) - Kolkata",
+"🎓 Internship: Motion Graphics Intern (After Effects, Animation) - Pune",
+"🎓 Internship: Game Art Intern (3D Models, Concept Sketches) - Bengaluru",
+"🎓 Internship: Product Design Intern (Research, Wireframes) - Hyderabad",
+"🎓 Internship: Packaging Design Intern (Mockups, Branding) - Chennai",
+"🎓 Internship: Art & Illustration Intern (Digital Painting, Storytelling) - Jaipur",
+"🎓 Internship: Interior Design Intern (CAD Drawings, Space Planning) - Delhi",
+"🎓 Internship: Exhibition Design Intern (Layouts, Branding) - Lucknow",
+"🎓 Internship: Digital Media Intern (Photoshop, Canva) - Chandigarh",
+"🎓 Internship: Storyboard Intern (Pre-visualization, Sketches) - Noida",
+"🎓 Internship: Branding Intern (Logos, Identity Design) - Ahmedabad",
+"🎓 Internship: Web Design Intern (HTML, CSS, Figma) - Bengaluru",
+"🎓 Internship: Photography Intern (Editing, Composition) - Gurugram",
+"🎓 Internship: Fashion Illustration Intern (Sketches, Trends) - Surat",
+"🎓 Internship: Animation Design Intern (2D/3D Concepts) - Hyderabad",
+"🎓 Internship: AR/VR Design Intern (Immersive Experiences) - Pune",
+"🎓 Internship: User Research Intern (Surveys, Usability Testing) - Mumbai",
+"🎓 Internship: Print Media Intern (Magazine Layouts, Posters) - Delhi",
+"🎓 Internship: Jewelry Design Intern (Sketching, CAD) - Jaipur",
+"🎓 Internship: Textile Design Intern (Patterns, Embroidery) - Kolkata",
+"🎓 Internship: Furniture Design Intern (Models, CAD) - Ahmedabad",
+"🎓 Internship: Character Design Intern (Concepts, Sketching) - Chennai",
+"🎓 Internship: Digital Content Intern (Social Media Graphics) - Noida",
+"🎓 Internship: Creative Writing & Design Intern (Visual Storytelling) - Lucknow",
+"🎓 Internship: Marketing Design Intern (Ads, Campaigns) - Gurugram",
+"🎓 Internship: Children’s Book Illustration Intern (Story Art, Layouts) - Bengaluru",
+"🎓 Internship: Architecture Design Intern (AutoCAD, Modeling) - Delhi",
+"🎓 Internship: Visual Communication Intern (Brand Identity, Typography) - Mumbai",
+"🎓 Internship: Calligraphy & Hand Lettering Intern (Typography, Poster Design) - Bhopal",
+"🎓 Internship: Film Poster Design Intern (Promotion, Photoshop) - Chandigarh",
+"🎓 Internship: Concept Art Intern (Storyboards, Environment Art) - Hyderabad",
+"🎓 Internship: Social Media Design Intern (Reels, Creatives) - Pune",
+"🎓 Internship: Set Design Intern (Theatre, Stage Layout) - Indore",
+
+"💼 Job: Graphic Designer (Adobe Photoshop, Illustrator) - Bengaluru",
+"💼 Job: UI/UX Designer (Wireframing, Prototyping) - Hyderabad",
+"💼 Job: Visual Designer (Branding, Layout Design) - Mumbai",
+"💼 Job: Creative Director (Campaigns, Art Supervision) - Delhi",
+"💼 Job: Product Designer (User Research, Interaction Design) - Pune",
+"💼 Job: Motion Graphics Designer (After Effects, Animation) - Chennai",
+"💼 Job: Game Designer (Concept Art, Level Design) - Bengaluru",
+"💼 Job: Fashion Illustrator (Sketching, Textile Design) - Kolkata",
+"💼 Job: Art Director (Visual Strategy, Team Management) - Gurugram",
+"💼 Job: Packaging Designer (3D Mockups, Branding) - Jaipur",
+"💼 Job: Interior Designer (Space Planning, CAD) - Lucknow",
+"💼 Job: Exhibition Designer (Event Layout, Branding) - Ahmedabad",
+"💼 Job: Digital Artist (Illustration, Concept Art) - Chandigarh",
+"💼 Job: Storyboard Artist (Film, Animation Projects) - Noida",
+"💼 Job: Industrial Designer (Product Innovation, 3D Modeling) - Indore"
+
+
+  ],
+  HospitalityTourism: [
+    "🎓 Internship: Travel Consultant Intern (Planning, Tourism Marketing) - Jaipur",
+"🎓 Internship: Hotel Operations Intern (Front Desk, Room Service) - Goa",
+"🎓 Internship: Event Planning Intern (Decor, Coordination) - Mumbai",
+"🎓 Internship: Tour Guide Intern (Local Culture, History) - Delhi",
+"🎓 Internship: Food Service Intern (Restaurant Operations) - Bengaluru",
+"🎓 Internship: Resort Intern (Guest Services, Housekeeping) - Kerala",
+"🎓 Internship: Travel Desk Intern (Ticketing, Packages) - Hyderabad",
+"🎓 Internship: Catering Intern (Menu Assistance, Hospitality) - Chennai",
+"🎓 Internship: Cruise Hospitality Intern (Guest Handling, Entertainment) - Kochi",
+"🎓 Internship: Airline Ground Hospitality Intern (Check-in, Passenger Service) - Delhi",
+"🎓 Internship: Travel Research Intern (Market Study, Promotions) - Pune",
+"🎓 Internship: Heritage Tourism Intern (Museums, Historical Sites) - Agra",
+"🎓 Internship: Luxury Hotel Intern (VIP Assistance, Guest Experience) - Udaipur",
+"🎓 Internship: Housekeeping Intern (Cleaning, Supervision) - Lucknow",
+"🎓 Internship: Spa & Wellness Intern (Therapies, Guest Relations) - Goa",
+"🎓 Internship: Restaurant Intern (Food Prep, Customer Service) - Chandigarh",
+"🎓 Internship: Tourism Marketing Intern (Promotions, Social Media) - Kolkata",
+"🎓 Internship: Tour Operations Intern (Itinerary Planning, Coordination) - Bengaluru",
+"🎓 Internship: Event Decor Intern (Design, Setup) - Jaipur",
+"🎓 Internship: Ticketing Intern (Airline & Railway Bookings) - Delhi",
+"🎓 Internship: Resort Activities Intern (Recreation, Games) - Kerala",
+"🎓 Internship: Travel Photography Intern (Content, Documentation) - Manali",
+"🎓 Internship: Hospitality Technology Intern (Booking Software, POS) - Hyderabad",
+"🎓 Internship: Cabin Crew Intern (Onboard Hospitality Training) - Mumbai",
+"🎓 Internship: Hotel Marketing Intern (Branding, Digital Ads) - Pune",
+"🎓 Internship: Guest Relations Intern (Customer Handling, Grievances) - Chennai",
+"🎓 Internship: Destination Promotion Intern (Tourism Boards, Exhibitions) - Jaipur",
+"🎓 Internship: Catering Services Intern (Kitchen Support, Service) - Gurugram",
+"🎓 Internship: Eco-tourism Intern (Wildlife Tours, Conservation) - Assam",
+"🎓 Internship: Backpackers Hostel Intern (Management, Community Engagement) - Rishikesh",
+"🎓 Internship: International Tourism Intern (Packages, Visa Support) - Delhi NCR",
+"🎓 Internship: Travel Influencer Support Intern (Content, Research) - Bengaluru",
+"🎓 Internship: Adventure Tourism Intern (Trekking, Rafting Support) - Himachal Pradesh",
+    "💼 Job: Hotel Manager (Operations, Customer Service) - Goa",
+"💼 Job: Front Office Manager (Guest Relations, Administration) - Delhi",
+"💼 Job: Resort Manager (Hospitality, Event Management) - Kerala",
+"💼 Job: Restaurant Manager (Food Service, Staff Management) - Mumbai",
+"💼 Job: Event Manager (Weddings, Conferences) - Jaipur",
+"💼 Job: Tour Manager (Guiding, Client Handling) - Agra",
+"💼 Job: Travel Agency Manager (Ticketing, Packages) - Hyderabad",
+"💼 Job: Cruise Manager (Hospitality, Guest Service) - Kochi",
+"💼 Job: Catering Manager (Menu Planning, Service) - Bengaluru",
+"💼 Job: Housekeeping Manager (Maintenance, Staff Supervision) - Pune",
+"💼 Job: Food & Beverage Manager (Operations, Quality Control) - Kolkata",
+"💼 Job: Airline Hospitality Manager (Cabin Service, Customer Experience) - Delhi NCR",
+"💼 Job: Luxury Hotel Manager (VIP Services, International Guests) - Udaipur",
+"💼 Job: Heritage Property Manager (Culture, Tourism) - Jodhpur",
+"💼 Job: Tourism Operations Manager (Travel Itinerary, Client Handling) - Chandigarh"
+
+  ],
+  Banking: [
+   "💼 Job: Bank PO (Customer Service, Finance Management) - Mumbai",
+"💼 Job: Relationship Manager (Client Handling, Wealth Advisory) - Delhi",
+"💼 Job: Credit Analyst (Loan Assessment, Risk Evaluation) - Bengaluru",
+"💼 Job: Branch Manager (Operations, Staff Management) - Hyderabad",
+"💼 Job: Investment Banker (M&A, Capital Markets) - Mumbai",
+"💼 Job: Risk Manager (Fraud Detection, Compliance) - Gurugram",
+"💼 Job: Treasury Manager (Cash Flow, Forex) - Kolkata",
+"💼 Job: Loan Manager (Approvals, Processing) - Lucknow",
+"💼 Job: Compliance Officer (RBI Norms, Regulations) - Chennai",
+"💼 Job: Financial Analyst (Data, Forecasting) - Pune",
+"💼 Job: Wealth Manager (HNI Clients, Investments) - Delhi NCR",
+"💼 Job: Digital Banking Officer (UPI, Mobile Banking) - Noida",
+"💼 Job: Audit Manager (Internal Audits, Risk Checks) - Jaipur",
+"💼 Job: Forex Manager (International Banking, Currency Trade) - Kochi",
+"💼 Job: Microfinance Officer (Rural Banking, Credit Support) - Patna",
+
+"🎓 Internship: Finance Intern (Loan Processing, Excel) - Kolkata",
+"🎓 Internship: Banking Operations Intern (Customer Service, Transactions) - Mumbai",
+"🎓 Internship: Risk Management Intern (Credit Risk, Compliance) - Delhi",
+"🎓 Internship: Financial Research Intern (Equity, Debt Reports) - Bengaluru",
+"🎓 Internship: Loan Processing Intern (Verification, Documents) - Hyderabad",
+"🎓 Internship: Wealth Management Intern (Client Advisory, Reports) - Pune",
+"🎓 Internship: Treasury Intern (Cash Flow, Investments) - Kolkata",
+"🎓 Internship: Audit Intern (Internal Checks, Reporting) - Gurugram",
+"🎓 Internship: Insurance Intern (Policy Support, Claims) - Chennai",
+"🎓 Internship: Forex Intern (Currency Exchange, Banking) - Kochi",
+"🎓 Internship: Customer Service Intern (Help Desk, Support) - Lucknow",
+"🎓 Internship: Financial Inclusion Intern (Rural Schemes, Micro Loans) - Patna",
+"🎓 Internship: Compliance Intern (RBI Guidelines, KYC) - Noida",
+"🎓 Internship: Fintech Intern (UPI, Banking Apps) - Bengaluru",
+"🎓 Internship: Investment Banking Intern (Market Research, Valuations) - Mumbai",
+"🎓 Internship: Credit Intern (Loan Assessment, Risk Reports) - Ahmedabad",
+"🎓 Internship: Marketing Intern (Bank Campaigns, Promotions) - Delhi NCR",
+"🎓 Internship: Retail Banking Intern (Branch Operations, Clients) - Chandigarh",
+"🎓 Internship: Consumer Finance Intern (Loans, Credit Cards) - Jaipur",
+"🎓 Internship: Financial Analyst Intern (Excel, Ratios) - Surat",
+"🎓 Internship: Digital Banking Intern (Mobile Apps, Transactions) - Hyderabad",
+"🎓 Internship: Agriculture Finance Intern (Farmer Loans, NABARD) - Nagpur",
+"🎓 Internship: MSME Finance Intern (Small Business Loans) - Indore",
+"🎓 Internship: Data Analytics Intern (Bank Reports, SQL) - Pune",
+"🎓 Internship: Equity Research Intern (Stocks, Trends) - Delhi",
+"🎓 Internship: Portfolio Management Intern (Wealth Clients, Assets) - Mumbai",
+"🎓 Internship: Treasury Risk Intern (Hedging, Derivatives) - Kolkata",
+"🎓 Internship: Loan Recovery Intern (Defaulters, Notices) - Patna",
+"🎓 Internship: Customer Engagement Intern (Feedback, Services) - Bengaluru",
+"🎓 Internship: Mutual Funds Intern (SIP, NAV Analysis) - Gurugram",
+"🎓 Internship: Credit Card Intern (Verification, Promotions) - Chennai",
+"🎓 Internship: Banking Tech Intern (Blockchain, AI Tools) - Hyderabad",
+"🎓 Internship: Sustainable Finance Intern (Green Bonds, ESG) - Delhi",
+"🎓 Internship: Internal Audit Intern (Reports, Risk Checks) - Chandigarh"
+
+  ],
+  Sports: [
+    "🎓 Internship: Sports Analyst Intern (Data, Performance Tracking) - Bengaluru",
+    "🎓 Internship: Cricket Scouting Intern (Match Analysis, Talent ID) - Mumbai",
+    "🎓 Internship: Football Coaching Intern (Youth Training, Strategy) - Goa",
+    "🎓 Internship: Event Management Intern (Tournament Planning, Logistics) - Delhi",
+    "🎓 Internship: Sports Physiotherapy Intern (Injury Rehab, Fitness) - Chennai",
+    "🎓 Internship: Strength & Conditioning Intern (Athlete Training, Nutrition) - Hyderabad",
+    "🎓 Internship: E-sports Analyst Intern (Gaming Data, Strategy) - Pune",
+    "🎓 Internship: Sports Journalism Intern (Writing, Reporting) - Kolkata",
+    "🎓 Internship: Sports Marketing Intern (Branding, Sponsorship) - Gurugram",
+    "🎓 Internship: Swimming Coach Intern (Technique, Training) - Jaipur",
+    "🎓 Internship: Badminton Intern (Coaching, Game Analysis) - Lucknow",
+    "🎓 Internship: Fitness Research Intern (Exercise Science, Reports) - Delhi",
+    "🎓 Internship: Performance Analyst Intern (Tracking, Video Review) - Ahmedabad",
+    "🎓 Internship: Yoga & Wellness Intern (Mindfulness, Flexibility) - Rishikesh",
+    "🎓 Internship: Basketball Coaching Intern (Strategy, Training) - Indore",
+    "🎓 Internship: Gym Management Intern (Operations, Customer Service) - Surat",
+    "🎓 Internship: Tennis Coaching Intern (Technique, Player Analysis) - Chandigarh",
+    "🎓 Internship: Sports Tech Intern (Wearables, Data Apps) - Bengaluru",
+    "🎓 Internship: Golf Coaching Intern (Player Support, Swing Analysis) - Gurugram",
+    "🎓 Internship: Adventure Sports Intern (Trekking, Safety Training) - Manali",
+    "🎓 Internship: Physiological Testing Intern (VO2 Max, Endurance) - Kochi",
+    "🎓 Internship: Martial Arts Intern (Discipline, Training) - Delhi",
+    "🎓 Internship: Cycling Intern (Performance Tracking, Coaching) - Pune",
+    "🎓 Internship: Sports HR Intern (Recruitment, Athlete Management) - Mumbai",
+    "🎓 Internship: Sports Management Intern (Team Coordination, Planning) - Lucknow",
+    "🎓 Internship: Table Tennis Coaching Intern (Technique, Matches) - Hyderabad",
+    "🎓 Internship: Kabaddi Analyst Intern (Game Review, Player Tracking) - Patna",
+    "🎓 Internship: Archery Intern (Training, Performance Analysis) - Ranchi",
+    "🎓 Internship: Wrestling Intern (Practice, Match Preparation) - Rohtak",
+    "🎓 Internship: Athletics Intern (Running, Track Coaching) - Bhopal",
+    "🎓 Internship: Paralympic Sports Intern (Support, Inclusive Training) - Delhi",
+    "🎓 Internship: Referee Training Intern (Rules, Officiating) - Chennai",
+    "🎓 Internship: Women’s Sports Intern (Event Promotion, Equality) - Jaipur",
+    "🎓 Internship: Volleyball Coaching Intern (Strategy, Matches) - Chandigarh",
+    "🎓 Internship: Ice Hockey Analyst Intern (Video Review, Performance) - Leh",
+    "💼 Job: Fitness Trainer (Sports Science, Coaching) - Delhi",
+    "💼 Job: Cricket Coach (Strategy, Training) - Mumbai",
+    "💼 Job: Football Manager (Team Management, Coaching) - Goa",
+    "💼 Job: Sports Event Manager (Planning, Sponsorship) - Bengaluru",
+    "💼 Job: Physiotherapist (Rehabilitation, Therapy) - Chennai",
+    "💼 Job: Strength Coach (Performance, Training Plans) - Hyderabad",
+    "💼 Job: E-sports Manager (Gaming Teams, Tournaments) - Pune",
+    "💼 Job: Sports Reporter (News, Communication) - Kolkata",
+    "💼 Job: Sports Marketing Executive (Campaigns, Promotions) - Gurugram",
+    "💼 Job: Swimming Coach (Fitness, Training) - Jaipur",
+    "💼 Job: Badminton Coach (Player Development, Matches) - Lucknow",
+    "💼 Job: Sports Scientist (Biomechanics, Research) - Delhi",
+    "💼 Job: Performance Analyst (Data, Strategy Reports) - Ahmedabad",
+    "💼 Job: Yoga Instructor (Wellness, Flexibility) - Rishikesh",
+    "💼 Job: Basketball Coach (Youth Training, Strategy) - Indore"
+  ],
+  Media: [
+    "🎓 Internship: Video Editor Intern (Premiere Pro, Storytelling) - Pune",
+    "🎓 Internship: Journalism Intern (Research, Reporting) - Delhi",
+    "🎓 Internship: Content Writing Intern (SEO, Blogs) - Bengaluru",
+    "🎓 Internship: Social Media Intern (Instagram, Campaigns) - Mumbai",
+    "🎓 Internship: Radio Intern (On-Air Support, Scripting) - Lucknow",
+    "🎓 Internship: PR Intern (Brand Communication, Press Releases) - Gurugram",
+    "🎓 Internship: Photography Intern (Editing, Shoots) - Jaipur",
+    "🎓 Internship: Script Writing Intern (Screenplay, Storytelling) - Chennai",
+    "🎓 Internship: Broadcast Intern (Camera Work, Editing) - Hyderabad",
+    "🎓 Internship: Advertising Intern (Creative, Strategy) - Kolkata",
+    "🎓 Internship: Copywriting Intern (Ad Copies, Taglines) - Bengaluru",
+    "🎓 Internship: Film Editing Intern (Final Cut Pro, Cinematics) - Delhi",
+    "🎓 Internship: Research Intern (Media Analytics, Fact Checking) - Noida",
+    "🎓 Internship: Anchoring Intern (Presentation, Voice Training) - Pune",
+    "🎓 Internship: Documentary Intern (Field Research, Editing) - Bhopal",
+    "🎓 Internship: Digital Marketing Intern (Campaigns, PPC) - Indore",
+    "🎓 Internship: Cinematography Intern (Lighting, Camera Work) - Chandigarh",
+    "🎓 Internship: Podcast Production Intern (Audio Editing, Hosting) - Bengaluru",
+    "🎓 Internship: Graphics & Motion Intern (After Effects, 2D) - Mumbai",
+    "🎓 Internship: Fact-Checking Intern (Verification, Sources) - Delhi",
+    "🎓 Internship: Publicity Intern (Posters, Promotions) - Jaipur",
+    "🎓 Internship: Media Relations Intern (Press Meets, Coordination) - Gurugram",
+    "🎓 Internship: Sound Engineering Intern (Mixing, Editing) - Chennai",
+    "🎓 Internship: Web Content Intern (Articles, Blogs) - Lucknow",
+    "🎓 Internship: TV Production Intern (Direction, Editing) - Hyderabad",
+    "🎓 Internship: Lifestyle Journalism Intern (Fashion, Culture) - Bengaluru",
+    "🎓 Internship: Event Coverage Intern (Photography, Video) - Pune",
+    "🎓 Internship: Creative Writing Intern (Scripts, Content) - Mumbai",
+    "🎓 Internship: Political Journalism Intern (Reporting, Editing) - Delhi",
+    "🎓 Internship: Media Strategy Intern (Campaign Planning, Research) - Kolkata",
+    "🎓 Internship: Editorial Intern (Publishing, Proofreading) - Noida",
+    "🎓 Internship: Film Production Intern (Direction, Editing) - Hyderabad",
+    "🎓 Internship: Documentary Research Intern (Surveys, Interviews) - Lucknow",
+    "🎓 Internship: Radio Jockey Intern (Presentation, Audience Engagement) - Chandigarh",
+    "🎓 Internship: Digital Storytelling Intern (Reels, Shorts) - Jaipur",
+    "💼 Job: News Reporter (Journalism, Communication) - Noida",
+    "💼 Job: Editor (Print, Digital Media) - Delhi",
+    "💼 Job: Anchor (News Reading, Communication) - Mumbai",
+    "💼 Job: Photographer (Events, Media) - Jaipur",
+    "💼 Job: PR Manager (Media Relations, Branding) - Gurugram",
+    "💼 Job: Film Director (Production, Creativity) - Chennai",
+    "💼 Job: Content Manager (Strategy, SEO) - Bengaluru",
+    "💼 Job: Cinematographer (Lighting, Camera) - Pune",
+    "💼 Job: Radio Jockey (Hosting, Communication) - Lucknow",
+    "💼 Job: Social Media Manager (Strategy, Content) - Kolkata",
+    "💼 Job: Copywriter (Advertising, Branding) - Hyderabad",
+    "💼 Job: Investigative Journalist (Research, Reporting) - Delhi",
+    "💼 Job: Digital Marketing Manager (Campaigns, SEO) - Noida",
+    "💼 Job: Sound Engineer (Mixing, Recording) - Mumbai",
+    "💼 Job: Film Producer (Budgeting, Distribution) - Bengaluru"
+  ],
+  Animation: [
+    "🎓 Internship: Animation Intern (After Effects, Storyboarding) - Mumbai",
+    "🎓 Internship: 2D Animation Intern (Character Design, Flash) - Bengaluru",
+    "🎓 Internship: 3D Modeling Intern (Maya, Blender) - Hyderabad",
+    "🎓 Internship: VFX Intern (Compositing, Green Screen) - Chennai",
+    "🎓 Internship: Motion Graphics Intern (After Effects, Premiere Pro) - Pune",
+    "🎓 Internship: Character Animation Intern (Rigging, Lip Sync) - Delhi",
+    "🎓 Internship: Game Art Intern (Unity, Unreal Engine) - Gurugram",
+    "🎓 Internship: Storyboard Intern (Sketching, Frame Planning) - Jaipur",
+    "🎓 Internship: Graphic Animation Intern (Posters, Digital Media) - Noida",
+    "🎓 Internship: CGI Intern (3D Renders, Environment Design) - Lucknow",
+    "🎓 Internship: Stop Motion Intern (Claymation, Puppetry) - Kolkata",
+    "🎓 Internship: Lighting & Rendering Intern (Arnold, V-Ray) - Bengaluru",
+    "🎓 Internship: Film Animation Intern (Shorts, Storytelling) - Mumbai",
+    "🎓 Internship: Cartoon Animation Intern (2D/3D, Storytelling) - Chandigarh",
+    "🎓 Internship: Simulation Intern (Particles, Fluids) - Hyderabad",
+    "🎓 Internship: AR/VR Intern (3D Integration, Immersive Media) - Delhi",
+    "🎓 Internship: Matte Painting Intern (Digital Painting, Backgrounds) - Chennai",
+    "🎓 Internship: Game Design Intern (Level Design, Characters) - Pune",
+    "🎓 Internship: Rotoscoping Intern (Green Screen Cleanup) - Noida",
+    "🎓 Internship: Visual Development Intern (Concept Art, Style Guides) - Gurugram",
+    "🎓 Internship: Comic Design Intern (Illustration, Coloring) - Jaipur",
+    "🎓 Internship: 3D Rigging Intern (Bones, Skinning) - Bengaluru",
+    "🎓 Internship: Film Editing & Animation Intern (Premiere Pro, Final Cut) - Hyderabad",
+    "🎓 Internship: Creature Animation Intern (Animals, Fantasy) - Mumbai",
+    "🎓 Internship: Digital Sculpting Intern (ZBrush, Blender) - Lucknow",
+    "🎓 Internship: Projection Mapping Intern (Animation, Events) - Delhi",
+    "🎓 Internship: AR Filters Intern (Spark AR, Snapchat Lens) - Pune",
+    "🎓 Internship: Motion Capture Intern (Body Tracking, Animation) - Chennai",
+    "🎓 Internship: Game Cinematics Intern (Cutscenes, Storyboarding) - Kolkata",
+    "🎓 Internship: Typography Animation Intern (Kinetic Text, Motion Design) - Bengaluru",
+    "🎓 Internship: Children’s Animation Intern (Cartoons, Educational Media) - Jaipur",
+    "🎓 Internship: Web Animation Intern (Interactive, GIFs) - Gurugram",
+    "🎓 Internship: Educational Animation Intern (Explainers, e-Learning) - Noida",
+    "🎓 Internship: Cinematic VFX Intern (3D Compositing, FX) - Hyderabad",
+    "🎓 Internship: Title Sequence Intern (Film, Motion Graphics) - Delhi",
+    "💼 Job: 3D Animator (Maya, Blender) - Hyderabad",
+    "💼 Job: VFX Artist (After Effects, Nuke) - Mumbai",
+    "💼 Job: Motion Graphics Designer (Digital Media, Branding) - Bengaluru",
+    "💼 Job: Character Designer (Concept Art, 2D/3D) - Pune",
+    "💼 Job: Game Animator (Unity, Unreal Engine) - Chennai",
+    "💼 Job: Storyboard Artist (Sketching, Scene Planning) - Delhi",
+    "💼 Job: CGI Artist (Visual Effects, Rendering) - Gurugram",
+    "💼 Job: AR/VR Animator (Immersive Tech, 3D Media) - Noida",
+    "💼 Job: Stop Motion Animator (Puppetry, Claymation) - Kolkata",
+    "💼 Job: Rotoscoping Artist (Green Screen, Masking) - Hyderabad",
+    "💼 Job: Simulation Artist (Particles, FX) - Bengaluru",
+    "💼 Job: Film Animation Director (Creative, Storytelling) - Mumbai",
+    "💼 Job: Technical Animator (Rigging, Scripting) - Delhi",
+    "💼 Job: Visual Development Artist (Concept Art, Style) - Jaipur",
+    "💼 Job: Creative Head (Animation Studio, Production) - Chennai"
+],
+  Aviation: [
+
+    "🎓 Internship: Aviation Intern (Airport Management, Safety Training) - Bengaluru",
+    "🎓 Internship: Cabin Crew Intern (Hospitality, Passenger Handling) - Delhi",
+    "🎓 Internship: Air Traffic Control Intern (Flight Coordination, Monitoring) - Mumbai",
+    "🎓 Internship: Aircraft Maintenance Intern (Engineering, Safety Checks) - Hyderabad",
+    "🎓 Internship: Flight Operations Intern (Scheduling, Crew Support) - Chennai",
+    "🎓 Internship: Aviation Safety Intern (Compliance, Security) - Pune",
+    "🎓 Internship: Customer Service Intern (Check-in, Boarding) - Jaipur",
+    "🎓 Internship: Ground Handling Intern (Baggage, Ramp Operations) - Lucknow",
+    "🎓 Internship: Meteorology Intern (Weather Analysis, Forecasting) - Kolkata",
+    "🎓 Internship: Pilot Training Intern (Flight Simulations, Navigation) - Bengaluru",
+    "🎓 Internship: Airline Management Intern (Operations, Planning) - Delhi",
+    "🎓 Internship: Air Cargo Intern (Logistics, Freight Handling) - Gurugram",
+    "🎓 Internship: Aviation HR Intern (Recruitment, Crew Scheduling) - Noida",
+    "🎓 Internship: Aviation Finance Intern (Budgeting, Accounts) - Mumbai",
+    "🎓 Internship: Technical Records Intern (Aircraft Logs, Documentation) - Hyderabad",
+    "🎓 Internship: Aviation Marketing Intern (Campaigns, Customer Engagement) - Chennai",
+    "🎓 Internship: Aviation IT Intern (Software Systems, Data Management) - Pune",
+    "🎓 Internship: Aviation Law Intern (Regulations, Compliance) - Delhi",
+    "🎓 Internship: Airline Reservation Intern (Ticketing, CRM) - Jaipur",
+    "🎓 Internship: Aircraft Design Intern (CAD, Engineering) - Bengaluru",
+    "🎓 Internship: Navigation Systems Intern (GPS, Radar Training) - Lucknow",
+    "🎓 Internship: Cabin Safety Intern (Emergency Procedures, First Aid) - Kolkata",
+    "🎓 Internship: Aviation Research Intern (Data Collection, Reports) - Hyderabad",
+    "🎓 Internship: Airline Operations Intern (Customer Relations, Flight Scheduling) - Chennai",
+    "🎓 Internship: Flight Simulator Intern (Pilot Training, Systems) - Mumbai",
+    "🎓 Internship: Security Intern (Passenger Screening, Protocols) - Delhi",
+    "🎓 Internship: Passenger Experience Intern (In-flight Service, Feedback) - Jaipur",
+    "🎓 Internship: Aircraft Engineering Intern (Engines, Repair) - Bengaluru",
+    "🎓 Internship: Flight Dispatch Intern (Route Planning, Clearance) - Pune",
+    "🎓 Internship: Aviation Supply Chain Intern (Inventory, Logistics) - Hyderabad",
+    "🎓 Internship: Fuel Management Intern (Efficiency, Cost Control) - Kolkata",
+    "🎓 Internship: Airline PR Intern (Media, Branding) - Noida",
+    "🎓 Internship: Airfield Operations Intern (Runway Safety, Lighting) - Gurugram",
+    "🎓 Internship: Flight Catering Intern (Meal Planning, Service) - Chennai",
+    "🎓 Internship: In-flight Entertainment Intern (Systems, Content) - Delhi",
+    "💼 Job: Ground Staff (Operations, Customer Service) - Delhi",
+    "💼 Job: Pilot (Navigation, Flight Operations) - Mumbai",
+    "💼 Job: Air Traffic Controller (Flight Safety, Coordination) - Bengaluru",
+    "💼 Job: Cabin Crew (Hospitality, Passenger Service) - Hyderabad",
+    "💼 Job: Aircraft Maintenance Engineer (Repairs, Safety) - Chennai",
+    "💼 Job: Flight Dispatcher (Route Planning, Scheduling) - Pune",
+    "💼 Job: Aviation Safety Officer (Compliance, Risk Management) - Gurugram",
+    "💼 Job: Airline Operations Manager (Crew, Scheduling) - Jaipur",
+    "💼 Job: Aviation HR Manager (Recruitment, Training) - Lucknow",
+    "💼 Job: Aviation Finance Officer (Accounts, Budgeting) - Kolkata",
+    "💼 Job: Aviation IT Specialist (Systems, Data Management) - Delhi",
+    "💼 Job: Airline Reservation Manager (Ticketing, CRM) - Noida",
+    "💼 Job: Cargo Operations Manager (Logistics, Freight) - Bengaluru",
+    "💼 Job: Aviation Marketing Manager (Campaigns, Promotions) - Mumbai",
+    "💼 Job: Airfield Manager (Runway, Safety Operations) - Hyderabad"
+
+  ],
+  Defence: [
+
+    "🎓 Internship: Research Intern (Military Tech, Policy) - Delhi",
+    "🎓 Internship: Cybersecurity Intern (Network Defence, Ethical Hacking) - Bengaluru",
+    "🎓 Internship: Defence Strategy Intern (Policy Analysis, Reports) - Pune",
+    "🎓 Internship: Weapons Systems Intern (Design, Maintenance) - Hyderabad",
+    "🎓 Internship: Space & Satellite Intern (Defence Communication, Tracking) - Ahmedabad",
+    "🎓 Internship: Naval Research Intern (Marine Tech, Submarines) - Kochi",
+    "🎓 Internship: Air Force Tech Intern (Radar, Avionics) - Bengaluru",
+    "🎓 Internship: Army Logistics Intern (Supply Chain, Planning) - Lucknow",
+    "🎓 Internship: Intelligence Intern (Data Analysis, Research) - Delhi",
+    "🎓 Internship: Border Security Intern (Surveillance, Patrolling Support) - Amritsar",
+    "🎓 Internship: Defence Engineering Intern (Robotics, Electronics) - Chennai",
+    "🎓 Internship: Cryptography Intern (Secure Communication, Encryption) - Mumbai",
+    "🎓 Internship: Disaster Relief Intern (Emergency Planning, Rescue Ops) - Patna",
+    "🎓 Internship: Nuclear Research Intern (Policy, Safety Systems) - Jaipur",
+    "🎓 Internship: Defence Psychology Intern (Mental Health, Performance) - Pune",
+    "🎓 Internship: Counter-Terrorism Intern (Data Support, Strategy) - Delhi",
+    "🎓 Internship: Peacekeeping Intern (UN Operations, Diplomacy) - Kolkata",
+    "🎓 Internship: Aerospace Intern (Drones, Aircraft Tech) - Hyderabad",
+    "🎓 Internship: Artificial Intelligence Intern (Defence Applications, ML) - Bengaluru",
+    "🎓 Internship: War History Intern (Archival Research, Documentation) - Chandigarh",
+    "🎓 Internship: Communication Systems Intern (Signal Processing, Radios) - Gurugram",
+    "🎓 Internship: Defence Journalism Intern (Reports, Field Coverage) - Noida",
+    "🎓 Internship: Ballistics Intern (Weapons Testing, Research) - Nagpur",
+    "🎓 Internship: Marine Biology Intern (Naval Defence, Ocean Research) - Kochi",
+    "🎓 Internship: Drone Operations Intern (Surveillance, Reconnaissance) - Delhi",
+    "🎓 Internship: Electronics Intern (Radar Systems, Circuit Design) - Mumbai",
+    "🎓 Internship: GIS Intern (Mapping, Strategic Planning) - Jaipur",
+    "🎓 Internship: Defence Law Intern (International Law, Military Codes) - Lucknow",
+    "🎓 Internship: Space Warfare Intern (Satellite Defence, Strategy) - Bengaluru",
+    "🎓 Internship: Bio-Tech Intern (Defence Medicine, Vaccines) - Hyderabad",
+    "🎓 Internship: Language Analyst Intern (Translation, Decryption) - Pune",
+    "🎓 Internship: Naval Architecture Intern (Ship Design, Engineering) - Visakhapatnam",
+    "🎓 Internship: Field Medicine Intern (Emergency Treatment, Combat Zones) - Delhi",
+    "🎓 Internship: Cyber Intelligence Intern (Data Security, Analysis) - Gurugram",
+    "🎓 Internship: UAV Systems Intern (Drone Tech, AI Integration) - Chennai",
+    "💼 Job: Defence Analyst (Security Studies, Strategy) - Pune",
+    "💼 Job: Cybersecurity Specialist (Military Networks, Data Protection) - Delhi",
+    "💼 Job: Weapons Engineer (Design, Development) - Hyderabad",
+    "💼 Job: Naval Officer (Marine Defence, Strategy) - Kochi",
+    "💼 Job: Air Force Officer (Operations, Avionics) - Bengaluru",
+    "💼 Job: Army Logistics Officer (Planning, Supply Chain) - Lucknow",
+    "💼 Job: Intelligence Officer (Research, Field Operations) - Gurugram",
+    "💼 Job: Border Security Officer (Surveillance, Patrolling) - Amritsar",
+    "💼 Job: Cryptography Expert (Secure Comms, Encryption) - Mumbai",
+    "💼 Job: Defence Policy Advisor (International Relations, Strategy) - Delhi",
+    "💼 Job: Aerospace Engineer (Missiles, Aircraft Systems) - Chennai",
+    "💼 Job: Drone Operations Manager (Reconnaissance, AI Systems) - Hyderabad",
+    "💼 Job: Ballistics Specialist (Testing, Analysis) - Nagpur",
+    "💼 Job: Nuclear Policy Analyst (Strategy, Safety) - Jaipur",
+    "💼 Job: UN Peacekeeping Officer (Global Defence, Diplomacy) - Kolkata"
+  ]
+};
+
+
+
+    function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+
+      addMessage(text, "user");
+      input.value = "";
+
+      setTimeout(() => {
+        const reply = getBotReply(text);
+        addMessage(reply, "bot");
+      }, 600);
+    }
+
+    input.addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+
+    function addMessage(text, sender) {
+      const msg = document.createElement("div");
+      msg.classList.add("message", sender);
+      msg.innerText = text;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function detectLanguage(msg) {
+      msg = msg.toLowerCase();
+
+      // Hinglish ke common shabd
+      const hinglishWords = [
+        "bhai","kya","chahiye","karna","hai","naukri",
+        "kaise","mil","mujhe","internship chahiye","career kaise","skills bata"
+      ];
+
+      // English ke common phrases
+      const englishPhrases = [
+        "i want","tell me","please","can you","about",
+        "help me","details","guide me","explain","information"
+      ];
+
+      if (hinglishWords.some(word => msg.includes(word))) {
+        return "hinglish";
+      }
+      if (englishPhrases.some(phrase => msg.includes(phrase))) {
+        return "english";
+      }
+      return "english";
+    }
+
+    function getBotReply(rawMsg) {
+      const msg = rawMsg.toLowerCase();
+      const lang = detectLanguage(msg);
+
+      // Sector-specific replies
+      for (let sector in sectorData) {
+        if (msg.includes(sector.toLowerCase())) {
+          return (lang === "hinglish")
+            ? `Yeh rahe ${sector} sector ke jobs aur internships:\n\n${sectorData[sector].join("\n")}`
+            : `Here are some ${sector} sector opportunities:\n\n${sectorData[sector].join("\n")}`;
+        }
+      }
+
+      // General replies
+      if (lang === "hinglish") {
+        if (msg.includes("internship"))
+          return "Internship ke liye IT, Finance, Agriculture, Healthcare aur Education sectors available hain. Batao tumhe kis sector mein interest hai?";
+        if (msg.includes("skills"))
+          return "Apni dream career choose karo aur main tumhe required skills bata dunga. Example: Data Analyst → Python, SQL, Excel.";
+        if (msg.includes("career"))
+          return "Future-proof careers: Data Science, Cloud Engineer, Cybersecurity, Finance Analyst, AgriTech Expert. Tumhe konsa pasand hai?";
+        if (msg.includes("trend") || msg.includes("future"))
+          return "AI 🤖, Cloud 🌩️, Cybersecurity 🔐, Green Energy 🌱 aur AgriTech 🚜 abhi ke hottest trends hain!";
+        if (msg.includes("scheme"))
+          return "PM Internship Scheme, Digital India aur Skill India program students ke liye bohot helpful hain. Kya tumhe details chahiye?";
+        if (msg.includes("help") || msg.includes("motivation"))
+          return "Don't worry bhai 💪 Mehnat karo, skills improve karo. Internship milna fix hai agar consistency rakhoge!";
+        return "Sorry bhai 😅 mujhe ye samajh nahi aaya. Tum mujhse internships, skills, careers, ya kisi sector ke bare mein poochho.";
+      } else {
+        if (msg.includes("internship"))
+          return "You can explore internships in IT, Finance, Agriculture, Healthcare, and Education sectors. Which sector are you interested in?";
+        if (msg.includes("skills"))
+          return "Choose your target career and I’ll list the skills you need. Example: Data Analyst → Python, SQL, Excel.";
+        if (msg.includes("career"))
+          return "Popular careers: Data Scientist, Web Developer, Finance Analyst, AgriTech Specialist, Healthcare Expert.";
+        if (msg.includes("trend") || msg.includes("future"))
+          return "Top future trends: Artificial Intelligence, Cloud Computing, Cybersecurity, Renewable Energy, and AgriTech.";
+        if (msg.includes("scheme") || msg.includes("government"))
+          return "Government initiatives like PM Internship Scheme, Digital India, and Skill India are great for students.";
+        if (msg.includes("motivation") || msg.includes("help"))
+          return "Stay consistent and keep learning 🚀. With practice, you’ll definitely land the right internship!";
+        if (msg.includes("hello") || msg.includes("hi"))
+          return "Hello 👋 How can I guide you today?";
+        return "I’m still learning 🤖. Try asking about internships, skills, careers, or a specific sector (IT, Finance, Agriculture, Healthcare, Education).";
+      }
+    }
+  </script>
+</body>
+</html>

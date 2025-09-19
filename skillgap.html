@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Skill Gap Advice</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #4b2ca0, #7b3cff);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 100vh;
+    }
+     .navbar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.7rem 2rem;
+      background: rgba(30, 24, 58, 0.92);
+      position: sticky;
+      top: 0;
+      z-index: 99;
+    }
+    .navbar .logo {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.6rem;
+      color: #fff;
+    }
+    .logo-icon {
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      margin-right: 8px;
+      background: url('images/logo.png') no-repeat center/contain;
+    }
+    .navbar .nav-links {
+      display: flex;
+      gap: 1.2rem;
+    }
+    .navbar .nav-links a, .navbar .lang-switch, .navbar .login-signup {
+      color: #e4d9d9;
+      font-size: 1.08rem;
+      padding: 0.5rem 1rem;
+      border-radius: 15px;
+      transition: background 0.23s;
+    }
+    .navbar .nav-links a:hover {
+      background: #7855db;
+      color: #fff;
+    }
+    .lang-switch {
+      background: transparent;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1.08rem;
+    }
+     .page-header {
+        color: #000000;
+      text-align: center;
+      padding: 20px;
+      width: 100%;
+    }
+    .page-header h1 {
+      margin: 0;
+      font-size: 50px;
+    }
+    .page-header p {
+      margin: 5px 0 0;
+      font-size: 26px;
+      opacity: 0.9;
+    }
+
+
+    #skill-gap {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      margin-top: 50px;
+      border-radius: 16px;
+      width: 650px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    #skill-gap h2 {
+      margin-bottom: 20px;
+      font-size: 26px;
+      color: #efe9f6;
+    }
+
+    input, select {
+      width: 90%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    button {
+      background: #7b3cff;
+      color: #fff;
+      padding: 12px 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.2s ease;
+    }
+
+    button:hover {
+      background: #9b6dff;
+    }
+
+    #gapResult {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .gap-card {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .gap-card strong { color: #ffddff; }
+    .missing { color: #ff9e9e; }
+    .suggestion { color: #9effa9; font-size: 14px; }
+
+      footer {
+      height: auto;
+      width: 100%;
+      background: rgba(120, 80, 240, 0.85);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
+      color: #f0e9ff;
+      margin-top: 60px;
+      padding: 40px 10vw;
+      box-sizing: border-box;
+      font-size: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 30px;
+    }
+    footer section {
+      flex: 1 1 280px;
+      min-width: 220px;
+    }
+    footer h3 {
+      margin-top: 0;
+      color: #d6caff;
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 12px;
+      letter-spacing: 0.03em;
+    }
+    footer p, footer li, footer a {
+      color: #e3dbff;
+      line-height: 1.5;
+    }
+    footer ul {
+      padding-left: 1.2em;
+      margin: 0;
+      list-style-type: disc;
+    }
+    footer ul li {
+      margin-bottom: 8px;
+    }
+    footer a {
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+    footer a:hover {
+      color: #fff;
+    }
+    .footer-bottom {
+      width: 100%;
+      text-align: center;
+      padding: 18px 0 10px 0;
+      font-size: 13px;
+      color: #000000;
+      background: rgba(115, 83, 210, 0.85);
+      box-shadow: inset 0 -1px 4px rgba(0,0,0,0.2);
+      letter-spacing: 0.05em;
+      margin-top: 30px;
+    }
+    /* Responsive */
+    @media (max-width: 850px) {
+      #career-path {
+        width: 90%;
+      }
+      footer {
+        padding: 30px 5vw;
+        font-size: 14px;
+      }
+    }
+    @media (max-width: 480px) {
+      footer {
+        flex-direction: column;
+        gap: 22px;
+      }
+      footer section {
+        min-width: auto;
+      }
+    }
+  </style>
+</head>
+  <nav class="navbar">
+  <div class="logo">
+    <span class="logo-icon"></span>
+    Skillin
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="student.html">Student</a>
+    <a href="employers.html">Employers</a>
+    <a href="ai.html">AI</a>
+    <a href="university.html">University</a>
+    <a href="admin.html">Admin/Govt</a>
+  </div>
+  <button class="lang-switch">
+    
+  </button>
+</nav>
+<div class="page-header">
+    <h1>🤖 Welcome to Skill Gap Advice</h1>
+    <p> Now you can know about the Gap in your skills and can enhance it</p>
+  </div>
+<body>
+  <div id="skill-gap">
+    <h2>Skill Gap Advice</h2>
+    
+    <input id="stuSkills" type="text" placeholder="Enter your skills (comma separated)">
+    <select id="careerChoice">
+  <option value="">Select Desired Career Path</option>
+
+  <!-- IT Sector -->
+  <option value="data">Data Analyst / Data Scientist</option>
+  <option value="frontend">Frontend Developer</option>
+  <option value="backend">Backend Developer</option>
+  <option value="cloud">Cloud / DevOps Engineer</option>
+  <option value="cyber">Cybersecurity Analyst</option>
+  <option value="ai">AI/ML Engineer</option>
+  <option value="dataEngineer">Data Engineer</option>
+
+  <!-- Finance Sector -->
+  <option value="finance">Finance Associate / Analyst</option>
+  <option value="accountant">Chartered Accountant / Auditor</option>
+  <option value="investment">Investment Banker</option>
+
+  <!-- Healthcare Sector -->
+  <option value="healthcare">Healthcare Data Specialist</option>
+  <option value="nurse">Registered Nurse</option>
+  <option value="pharma">Pharmaceutical Researcher</option>
+  <option value="doctor">Doctor</option>
+
+  <!-- Agriculture Sector -->
+  <option value="agri">AgriTech Specialist</option>
+  <option value="foodtech">Food Technology Scientist</option>
+  <option value="horticulture">Horticulture Expert</option>
+
+  <!-- Education Sector -->
+  <option value="teacher">School Teacher</option>
+  <option value="trainer">Corporate Trainer</option>
+  <option value="professor">Professor</option>
+
+  <!-- Engineering Sector -->
+  <option value="mechanical">Mechanical Engineer</option>
+  <option value="civil">Civil Engineer</option>
+  <option value="electrical">Electrical Engineer</option>
+  <option value="electronics">Electronics Engineer</option>
+
+  <!-- Business / Management -->
+  <option value="mba">MBA (Business Management)</option>
+  <option value="hr">Human Resources Manager</option>
+  <option value="marketing">Marketing Manager</option>
+
+  <!-- Law -->
+  <option value="lawyer">Lawyer</option>
+  <option value="corporateLaw">Corporate Lawyer</option>
+
+  <!-- Miscellaneous -->
+  <option value="journalist">Journalist</option>
+  <option value="designer">Graphic Designer</option>
+</select>
+
+    <br>
+    <button onclick="checkSkillGap()">Check Advice</button>
+    
+    <div id="gapResult"></div>
+  </div>
+ <footer>
+    <section>
+      <h3>About Us</h3>
+      <p>This portal utilizes AI technology to guide students toward promising career paths and internship opportunities, empowering future professionals to make informed decisions.</p>
+    </section>
+    <section>
+      <h3>Features</h3>
+      <ul>
+        <li><a href="Ai.html">Ai</a></li>
+        <li><a href="cpr.html">Career Path Recommendation</a></li>
+        <li><a href="matchup.html">Matching Up</a></li>
+        <li><a href="skillgap.html">Skill Gap Advice</a></li>
+        <li><a href="chatbot.html">Chatbot Support</a></li>
+      </ul>
+    </section>
+    <section>
+      <h3>Contact</h3>
+      <p>Email: <a href="skillin.portal@gmail.com">skillin.portal@gmail.com</a></p>
+    </section>
+     <div class="footer-bottom">
+    &copy; 2025 SkillinBot | Powered by PM Internship Smart Allocation System
+  </div>
+  </footer>
+
+
+
+  <script>
+    // Required skills database
+   const careerSkills = {
+  // IT
+  data: ["python","sql","excel","powerbi"],
+  frontend: ["html","css","javascript","react"],
+  backend: ["java","spring","mysql","api"],
+  cloud: ["aws","docker","kubernetes","linux"],
+  cyber: ["network security","firewall","linux","cryptography"],
+  ai: ["python","machine learning","deep learning","tensorflow","nlp"],
+
+  // Finance
+  finance: ["excel","accounting","financial analysis","powerbi"],
+  accountant: ["tally","audit","compliance","taxation"],
+  investment: ["stock market","valuation","portfolio","risk analysis"],
+
+  // Healthcare
+  healthcare: ["biology","data analysis","epidemiology","excel"],
+  nurse: ["patient care","clinical skills","first aid","record keeping"],
+  pharma: ["chemistry","lab testing","clinical trials","regulations"],
+  doctor: ["diagnosis","surgery","patient care","medicine knowledge"],
+
+  // Agriculture
+  agri: ["soil testing","crop management","iot","data analysis"],
+  foodtech: ["quality control","lab testing","nutrition","safety standards"],
+  horticulture: ["plant breeding","greenhouse management","fertilizers","pest control"],
+
+  // Education
+  teacher: ["subject knowledge","communication","lesson planning","assessment"],
+  trainer: ["presentation","leadership","training design","soft skills"],
+  professor: ["research","subject expertise","publication","mentorship"],
+
+  // Engineering
+  mechanical: ["autocad","solidworks","manufacturing","thermodynamics"],
+  civil: ["autocad","surveying","estimation","structural analysis"],
+  electrical: ["circuit design","power systems","matlab","control systems"],
+  electronics: ["vlsi","embedded systems","pcb design","signal processing"],
+
+  // Business / Management
+  mba: ["leadership","business strategy","finance","marketing"],
+  hr: ["recruitment","communication","employee engagement","labour laws"],
+  marketing: ["seo","branding","market research","digital marketing"],
+
+  // Law
+  lawyer: ["legal research","drafting","contracts","litigation"],
+  corporateLaw: ["compliance","contract law","company law","arbitration"],
+
+  // Miscellaneous
+  journalist: ["reporting","writing","communication","editing"],
+  designer: ["photoshop","illustrator","creativity","figma"],
+  dataEngineer: ["python","hadoop","spark","etl pipelines"]
+};
+
+
+    function checkSkillGap(){
+      const inputSkills = document.getElementById("stuSkills").value
+        .toLowerCase().split(",").map(s => s.trim());
+      const career = document.getElementById("careerChoice").value;
+
+      if(!career){
+        document.getElementById("gapResult").innerHTML = "<p>Please select a career path!</p>";
+        return;
+      }
+
+      const required = careerSkills[career];
+      const missing = required.filter(s => !inputSkills.includes(s));
+      const matched = required.filter(s => inputSkills.includes(s));
+
+      let html = `
+        <div class="gap-card">
+          <strong>🎯 Target Career:</strong> ${document.getElementById("careerChoice").options[document.getElementById("careerChoice").selectedIndex].text}<br>
+          ✅ Matched Skills: ${matched.length ? matched.join(", ") : "None"}<br>
+          ⚡ <span class="missing">Missing Skills:</span> ${missing.length ? missing.join(", ") : "None"}<br>
+          <div class="suggestion">👉 Suggestion: Focus on learning missing skills to improve your chances.</div>
+        </div>
+      `;
+
+      document.getElementById("gapResult").innerHTML = html;
+    }
+  </script>
+</body>
+</html>

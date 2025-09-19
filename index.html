@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>National Internship Matching Portal</title>
+
+  <!-- Preload Fonts for Faster Rendering -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+  </noscript>
+
+
+  <style>
+    /* Gradient background for body */
+    body {
+      margin: 0;
+      font-family: 'Montserrat', Arial, sans-serif;
+      background: linear-gradient(135deg, #3e2277 0%, #1a2a51 60%, #d556c6 100%);
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.7rem 2rem;
+      background: rgba(30, 24, 58, 0.92);
+      position: sticky;
+      top: 0;
+      z-index: 99;
+    }
+    .navbar .logo {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.6rem;
+      color: #fff;
+    }
+    .logo-icon {
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      margin-right: 8px;
+      background: url('images/logo.png') no-repeat center/contain;
+    }
+    .navbar .nav-links {
+      display: flex;
+      gap: 1.2rem;
+    }
+    .navbar .nav-links a, .navbar .lang-switch, .navbar .login-signup {
+      font-size: 1.08rem;
+      padding: 0.5rem 1rem;
+      border-radius: 15px;
+      transition: background 0.23s;
+    }
+    .navbar .nav-links a:hover {
+      background: #7855db;
+      color: #fff;
+    }
+    .lang-switch {
+      background: transparent;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1.08rem;
+    }
+    .navbar .login-signup {
+      background: #9100ff;
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      margin-left: 0.7rem;
+      transition: background 0.2s;
+    }
+    .navbar .login-signup:hover {
+      background: #b840d6;
+    }
+    /* Hamburger */
+    .navbar .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+    }
+    .navbar .hamburger span {
+      display: block;
+      width: 25px;
+      height: 3px;
+      background: #fff;
+      border-radius: 2px;
+    }
+    @media (max-width: 900px) {
+      .navbar {
+        padding: 0.7rem 1rem;
+      }
+      .navbar .nav-links,
+      .navbar .lang-switch,
+      .navbar .login-signup {
+        display: none;
+      }
+      .navbar .hamburger {
+        display: flex;
+      }
+      .mobile-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+        background: rgba(36, 19, 54, 0.98);
+        position: absolute;
+        top: 65px;
+        left: 0;
+        width: 100vw;
+        padding: 2rem 1.5rem;
+        z-index: 200;
+      }
+      .mobile-menu a,
+      .mobile-menu .lang-switch,
+      .mobile-menu .login-signup {
+        font-size: 1.2rem;
+        padding: 0.8rem 1rem;
+      }
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 3rem 2rem 1.8rem 2rem;
+      text-align: center;
+      background: linear-gradient(120deg, #512e8f 28%, #3b1f73 50%, #a678ff 100%);
+      border-radius: 0 0 25px 25px;
+      box-shadow: 0 2px 15px rgba(79,24,110,0.08);
+      margin-bottom: 1.3rem;
+    }
+    .hero h1 {
+      font-size: 2.7rem;
+      font-weight: bold;
+      margin-bottom: 1.1rem;
+    }
+    .hero .subtitle {
+      font-size: 1.18rem;
+      font-weight: 400;
+      margin-bottom: 2rem;
+      color: #d5cfff;
+    }
+    .hero .highlights {
+      display: flex;
+      gap: 1.3rem;
+      justify-content: center;
+      margin-bottom: 1.7rem;
+    }
+    .highlight-box {
+      background: linear-gradient(145deg, #6838bf 55%, #ee6ccd 100%);
+      color: #fff;
+      font-size: 1.13rem;
+      font-weight: bold;
+      padding: 1rem 2.1rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 32px rgba(78,29,123,0.14);
+    }
+    .partner-logos {
+      display: flex;
+      gap: 1.2rem;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+      margin-bottom: 0.3rem;
+    }
+    .partner-logos img {
+      height: 32px;
+      filter: grayscale(10%);
+    }
+    @media (max-width: 700px) {
+      .hero h1 { font-size: 1.75rem; }
+      .hero { padding: 2rem 1rem 1.2rem 1rem; }
+      .hero .highlights { flex-direction: column; gap: 0.7rem; }
+      .partner-logos { gap: 0.7rem; }
+    }
+
+    /* Section Titles */
+    .section-title {
+      font-size: 2rem;
+      text-align: center;
+      font-weight: bold;
+      margin-top: 2rem;
+      margin-bottom: 1.1rem;
+      color: #fff;
+      letter-spacing: 1.5px;
+    }
+    .section-subtitle {
+      font-size: 1.3rem;
+      color: #db32b8;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 0.2rem;
+    }
+
+    /* Carousel */
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      overflow: hidden;
+      padding: 1rem 0 2rem 0;
+    }
+    .carousel-track {
+      display: flex;
+      transition: transform 0.5s;
+      gap: 1.7rem;
+    }
+    .carousel-card {
+      background: linear-gradient(120deg, #2d174e 54%, #a841c9 100%);
+      border-radius: 13px;
+      box-shadow: 0 5px 22px rgba(86,28,136,0.15);
+      color: #fff;
+      min-width: 275px;
+      max-width: 320px;
+      padding: 1rem 1.1rem 1.2rem 1.1rem;
+      margin-bottom: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      align-items: flex-start;
+      transition: box-shadow 0.23s, transform 0.22s;
+      font-size: 1rem;
+      cursor: pointer;
+      border: 1.5px solid #8839e4;
+    }
+    .carousel-card:hover {
+      box-shadow: 0 15px 32px rgba(140,40,217,0.16);
+      transform: translateY(-7px) scale(1.045);
+    }
+    .carousel-card .card-title {
+      font-size: 1.12rem;
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+      color: #ffb3fa;
+    }
+    .carousel-card .card-desc { color: #efefef; font-size: 0.96rem; }
+    .carousel-card .card-cta {
+      background: #a832ed;
+      color: #fff;
+      border: none;
+      border-radius: 15px;
+      padding: 0.4rem 1rem;
+      font-size: 1.01rem;
+      font-weight: 600;
+      margin-top: 0.15rem;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+    .carousel-card .card-cta:hover {
+      background: #6634b6;
+    }
+    .carousel-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(120,48,250,0.25);
+      border: none;
+      color: #fff;
+      font-size: 2.25rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 39px;
+      cursor: pointer;
+      z-index: 2;
+      transition: background 0.19s;
+    }
+    .carousel-arrow:hover {
+      background: #943fc7;
+    }
+    .carousel-arrow.left { left: 6px; }
+    .carousel-arrow.right { right: 6px; }
+    @media (max-width: 700px) {
+      .carousel-card { min-width: 80vw; max-width: 90vw; }
+      .carousel-container { padding: 0.7rem 0 1.1rem 0; }
+    }
+
+    /* Jobs & Internships Section */
+    .jobs-internships-section {
+      margin-top: 1.35rem;
+      text-align: center;
+      padding-bottom: 0.4rem;
+    }
+    .jobs-container,
+    .internships-container {
+      display: flex;
+      gap: 1.1rem;
+      justify-content: center;
+      overflow-x: auto;
+      padding: 1rem 0;
+      margin-bottom: 0.4rem;
+      scrollbar-width: thin;
+      scrollbar-color: #5900a6 #e7cff7;
+    }
+    .job-card,
+    .internship-card {
+      min-width: 220px;
+      max-width: 230px;
+      background: linear-gradient(120deg, #41146d 40%, #8654e6 100%);
+      color: #fff;
+      border-radius: 11px;
+      padding: 1.1rem 1rem;
+      box-shadow: 0 5px 16px rgba(98,24,117,0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.47rem;
+      font-size: 0.97rem;
+      border: 1.5px solid #9c49f4;
+      transition: box-shadow 0.19s, transform 0.18s;
+      cursor: pointer;
+    }
+    .job-card:hover, .internship-card:hover {
+      box-shadow: 0 12px 27px rgba(120,40,170,0.16);
+      transform: translateY(-6px) scale(1.08);
+    }
+    .card-banner {
+      font-weight: bold;
+      font-size: 1.07rem;
+      margin-bottom: 0.17rem;
+      color: #f5aaff;
+    }
+    @media (max-width: 700px) {
+      .job-card, .internship-card {
+        min-width: 75vw;
+        max-width: 84vw;
+      }
+      .jobs-container, .internships-container {
+        gap: 0.65rem; padding: 0.7rem 0; }
+    }
+    .ai-form-box {
+  background: #fff;
+  color: #000;
+  padding: 20px;
+  border-radius: 15px;
+  max-width: 500px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 5px 18px rgba(0,0,0,0.15);
+}
+
+.ai-form-box input,
+.ai-form-box select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.ai-form-box button {
+  background: #9100ff;
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  width: 100%;
+  transition: background 0.2s;
+}
+
+.ai-form-box button:hover {
+  background: #b840d6;
+}
+
+.ai-form-box #matchResult {
+  margin-top: 20px;
+  width: 100%;
+  text-align: left;
+}
+
+
+    /* Partners Section */
+    .partners-section {
+      margin-top: 2rem;
+      text-align: center;
+      padding-bottom: 2rem;
+    }
+    .partner-tiles {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 0.7rem;
+    }
+    .partner-tile {
+  width: 140px;     /* fixed width */
+  height: 90px;     /* fixed height */
+  background: #2d1548;
+  border-radius: 17px;
+  padding: 0;       /* remove padding to avoid image shrinking */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 16px rgba(64,12,102,0.14);
+  transition: box-shadow 0.18s, transform 0.15s;
+  border: 1.5px solid #6d28ae;
+  overflow: hidden; /* crop overflow */
+}
+
+.partner-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* covers entire tile without distortion */
+  display: block;
+  border-radius: 17px;
+}
+
+    .partner-tile:hover {
+      box-shadow: 0 10px 32px rgba(76,29,133,0.18);
+      transform: scale(1.09);
+    }
+    
+
+    @media (max-width: 700px) {
+      .partner-tiles { gap: 0.87rem; flex-wrap: wrap; }
+      .partner-tile { min-width: 80px; max-width: 32vw; min-height: 48px; padding: 0.55rem; }
+      .partner-tile img { height: 32px; max-width: 76px; }
+    }
+
+    /* About Us + Sidebar quick links */
+    .about-section {
+      display: flex;
+      gap: 2rem;
+      background: linear-gradient(135deg, #3e2277 20%, #190e37 70%);
+      margin: 2.2rem auto 0 auto;
+      padding: 2.7rem 2rem;
+      border-radius: 29px;
+      max-width: 1100px;
+      color: #fff;
+      box-shadow: 0 5px 32px rgba(64,17,87,0.15);
+    }
+    .about-left {
+      flex: 2.2;
+      font-size: 1rem;
+      font-weight: 400;
+      color: #e9e6f4;
+      margin-right: 1.6rem;
+      min-width: 180px;
+    }
+    .about-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.02rem;
+      min-width: 120px;
+      align-items: flex-start;
+      font-weight: 600;
+      color: #fff;
+    }
+    .about-quick-links { margin-top: 0.18rem; }
+    .about-quick-links ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 1.12rem;
+    }
+    .about-quick-links ul li {
+      margin-bottom: 0.34rem;
+      padding: 0.15rem 0;
+      padding-left: 0.07rem;
+      border-radius: 5px;
+      transition: background 0.13s;
+      cursor: pointer;
+    }
+    .about-quick-links ul li:hover {
+      background: #8233c2;
+    }
+    .about-contact {
+      display: flex;
+      align-items: center;
+      margin-top: 1.2rem;
+      font-size: 1.07rem;
+    }
+    .about-contact .contact-icon {
+      width: 24px;
+      height: 24px;
+      background: url('https://img.icons8.com/fluency/48/email-open.png') no-repeat center/contain;
+      margin-right: 0.7rem;
+    }
+    .about-contact a {
+      color: #fab7fc;
+      font-weight: bold;
+      letter-spacing: 0.4px;
+    }
+    @media (max-width: 900px) {
+      .about-section {
+        flex-direction: column;
+        padding: 2rem 1rem;
+        gap: 0.9rem;
+        max-width: 95vw;
+      }
+      .about-left { margin-right: 0; }
+      .about-right { min-width: 80px; }
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      font-size: 1rem;
+      background: linear-gradient(120deg, #512e8f 38%, #431a73 62%, #a678ff 100%);
+      color: #fff;
+      padding: 1rem 0;
+      border-radius: 24px 24px 0 0;
+      margin-top: 2.5rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* Utilities */
+    .hidden { display: none !important; }
+     .modal {
+      display: none; 
+      position: fixed;
+      z-index: 500;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.65);
+      
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: #fff;
+      color: #000;
+      padding: 2rem;
+      border-radius: 15px;
+      width: 350px;
+      max-width: 90%;
+      text-align: center;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.4);
+      position: relative;
+      animation: fadeIn 0.3s ease;
+    }
+    .modal-content h2 {
+      margin-top: 0;
+      color: #6a0dad;
+    }
+    .modal-content input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    .modal-content button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 12px;
+      background: #6a0dad;
+      border: none;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .modal-content button:hover {
+      background: #8839e4;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px; right: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #444;
+    }
+    .toggle-link {
+      margin-top: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      color: #6a0dad;
+    }
+    @keyframes fadeIn {
+      from {opacity:0; transform: scale(0.9);}
+      to {opacity:1; transform: scale(1);}
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <span class="logo-icon"></span>
+      Skillin
+    </div>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="student.html">Student</a>
+      <a href="employers.html">Employers</a>
+      <a href="ai.html">AI</a>
+      <a href="university.html">University</a>
+      <a href="admin.html">Admin/Govt</a>
+    </div>
+   <!-- Language Switch -->
+<button class="lang-switch" onclick="openComingSoon()">
+  Eng | हिंदी ▾
+</button>
+<!-- Coming Soon Modal -->
+<div id="comingSoonModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeComingSoon()">&times;</span>
+    <h2>🌐 Coming Soon</h2>
+    <p>Multi-language support will be available soon. Stay tuned!</p>
+  </div>
+</div>
+
+
+    <button class="login-signup" onclick="openModal('login')">
+      Login/Signup
+    </button>
+    <div class="hamburger" onclick="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+
+  <!-- Responsive mobile dropdown menu -->
+  <div class="mobile-menu hidden" id="mobileMenu">
+    <a href="#">Home</a>
+    <a href="student.html">Student</a>
+    <a href="#">Employees</a>
+   <li><a href="ai.html">AI</a></li>
+    <a href="#">University</a>
+    <a href="admin.html">Admin/Govt</a>
+    <button class="lang-switch" onclick="openComingSoon()">Eng | हिंदी ▾</button>
+
+        <button class="login-signup" onclick="openModal('login')">Login/Signup</button>
+  </div>
+  <!-- 🔹 Modal HTML -->
+<div id="authModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <h2 id="modalTitle">Login</h2>
+    <form id="authForm">
+      <input type="text" id="nameField" placeholder="Full Name" style="display:none;">
+      <input type="email" id="emailField" placeholder="Email" required>
+      <input type="password" id="passwordField" placeholder="Password" required>
+      <button type="submit">Submit</button>
+    </form>
+    <div class="toggle-link" onclick="toggleForm()">Don't have an account? Sign Up</div>
+  </div>
+</div>
+
+<!-- 🔹 Success Message -->
+<div id="successMessage" style="
+  display:none; 
+  text-align:center; 
+  margin-top:20px; 
+  font-size:18px; 
+  font-weight:bold; 
+  color:#90ff90;">
+</div>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>National Internship Matching Portal</h1>
+    <div class="subtitle">
+      Smart, transparent and inclusive internships for students across India – powered by <b>AI</b>-driven matchmaking between students and industry.
+    </div>
+    <div class="highlights">
+      <div class="highlight-box">18,000 Placed Students</div>
+      <div class="highlight-box">1,500 Registered Institutes</div>
+      <div class="highlight-box">15,000 Registered Industries</div>
+    </div>
+   <div class="partner-logos">
+  <img src="images/nykaa.png" alt="Nykaa" loading="lazy" width="100" height="32">
+  <img src="images/decathlon.png" alt="Decathlon" loading="lazy" width="100" height="32">
+  <img src="images/Amazon_logo.svg" alt="Amazon" loading="lazy" width="100" height="32">
+  <img src="images/cocacola.png" alt="CocaCola" loading="lazy" width="100" height="32">
+  <img src="images/practo.png" alt="Practo" loading="lazy" width="100" height="32">
+  <img src="images/oyo.png" alt="OYO" loading="lazy" width="100" height="32">
+  <img src="images/paytm.png" alt="Paytm" loading="lazy" width="100" height="32">
+  <img src="images/nestle.png" alt="Nestle" loading="lazy" width="100" height="32">
+  <img src="images/HCL.png" alt="HCL" loading="lazy" width="100" height="32">
+  <img src="images/bms.png" alt="BookMyShow" loading="lazy" width="100" height="32">
+</div>
+
+
+  <!-- Careers Section -->
+  <div class="section-title">
+    Careers Start Here <span style="color:#ed23c3; font-size:2.1rem; font-weight:900;">– Trending</span>
+  </div>
+  <div class="carousel-container">
+    <button class="carousel-arrow left" onclick="slideCarousel(-1)">&#8592;</button>
+    <div class="carousel-track" id="trendingCarousel">
+      <!-- Each card -->
+      <div class="carousel-card">
+        <div class="card-title">India Business Case Programme 2025-26</div>
+        <div class="card-desc">Empowering Youth for Career Readiness</div>
+        <button class="card-cta">Apply now</button>
+      </div>
+      <div class="carousel-card">
+        <div class="card-title">ZERO EXPERIENCE JOBS REVOLUTION</div>
+        <div class="card-desc">Get started with top internships<br>for new graduates</div>
+        <button class="card-cta">Apply now</button>
+      </div>
+      <div class="carousel-card">
+        <div class="card-title">TATA CRUCIBLE</div>
+        <div class="card-desc">Event dates: 2025 | Earn chance to be 'Quiz Champ'</div>
+        <button class="card-cta">Register now</button>
+      </div>
+    </div>
+    <button class="carousel-arrow right" onclick="slideCarousel(1)">&#8594;</button>
+  </div>
+
+  <!-- Jobs & Internships Section -->
+  <section class="jobs-internships-section">
+    <div class="section-title" style="margin-top:0.2rem;">Jobs</div>
+    <div class="jobs-container">
+      <div class="job-card">
+        <div class="card-banner">We're hiring.</div>
+        <div>Exciting roles for graduates.</div>
+      </div>
+      <div class="job-card">
+        <div class="card-banner">WE'RE LOOKING FOR YOU!</div>
+        <div>Apply for open positions in tech, ops, marketing.</div>
+      </div>
+      <div class="job-card">
+        <div class="card-banner">WE'RE HIRING - JOIN OUR TEAM</div>
+        <div>Competitive salary, flexible options.</div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:1.2rem;">Internships</div>
+    <div class="internships-container">
+      <div class="internship-card">
+        <div class="card-banner">IMPORTANCE OF SUMMER INTERNSHIP</div>
+        <div>Build skills. Make connections. Grow your career.</div>
+      </div>
+      <div class="internship-card">
+        <div class="card-banner">WE ARE LOOKING FOR INTERNS</div>
+        <div>Join top companies this summer.</div>
+      </div>
+      <div class="internship-card">
+        <div class="card-banner">Paid Internship Program</div>
+        <div>Stipend, Certificate & Placement opportunities.</div>
+      </div>
+    </div>
+  </section>
+
+    <!-- 🔹 Smart AI Matching Section -->
+  <section class="jobs-internships-section" style="margin-top:2rem;">
+    <div class="section-title">Smart AI Matching Demo</div>
+    <div style="background:#2d174e;color:#000;padding:20px;border-radius:15px;max-width:600px;margin:auto;">
+      <input id="stuSkills" type="text" placeholder="Enter your skills (comma separated)" style="width:90%;margin-bottom:10px;padding:10px;border-radius: 15px;">
+     <select id="stuState" style="width:90%;margin-bottom:10px;padding:10px;border-radius: 15px;" onchange="updateCities()">
+  <option value="">Select State</option>
+  <option value="Delhi">Delhi</option>
+  <option value="Maharashtra">Maharashtra</option>
+  <option value="Karnataka">Karnataka</option>
+  <option value="Tamil Nadu">Tamil Nadu</option>
+  <option value="Uttar Pradesh">Uttar Pradesh</option>
+  <option value="Rajasthan">Rajasthan</option>
+  <option value="West Bengal">West Bengal</option>
+</select>
+
+<select id="stuCity" style="width:90%;margin-bottom:10px;padding:10px;border-radius: 15px;">
+  <option value="">Select City</option>
+  <option value="">Delhi</option>
+  <option value="">Mumbai</option>
+  <option value="">Bangalore</option>
+  <option value="">Chennai</option>
+  <option value="">Lucknow</option>
+  <option value="">Jaipur</option>
+  <option value="">Kolkata</option>
+</select>
+
+
+      <select id="stuSector" style="width:85%;margin-bottom:10px;padding:10px;border-radius: 15px;">
+        <option value="">Select Sector Preference</option>
+        <option value="IT">IT</option>
+        <option value="Agriculture">Agriculture</option>
+        <option value="Finance">Finance</option>
+        <option value="Education">Education</option>
+        <option value="Law">Law</option>
+        <option value="Healthcare">Healthcare</option>
+        <option value="">Other</option>
+      </select>
+
+      <select id="stuCategory" style="width:85%;margin-bottom:10px;padding:10px;border-radius: 15px;">
+        <option value="">Select Category</option>
+        <option value="General">General</option>
+        <option value="OBC">OBC</option>
+        <option value="SC/ST">SC/ST</option>
+        <option value="EWS">EWS</option>
+      </select>
+
+      <select id="stuPast" style="width:85%;margin-bottom:10px;padding:10px;border-radius: 15px;">
+        <option value="false">First Time Applicant</option>
+        <option value="true">Past Participant</option>
+      </select>
+
+      <button onclick="matchOpportunities()" style="background:#9100ff;color:#fff;padding:10px 15px;border:none;border-radius:8px;cursor:pointer;">Find Matches</button>
+
+      <div id="matchResult" style="margin-top:20px;"></div>
+    </div>
+  </section>
+
+  <!-- Partners Section -->
+  <section class="partners-section">
+    <div class="partner-tiles">
+  <div class="partner-tile">
+    <img src="images/skillindia.png" alt="Skill India" loading="lazy" width="140" height="90">
+  </div>
+  <div class="partner-tile">
+    <img src="images/mca.webp" alt="Ministry of Corporate Affairs" loading="lazy" width="140" height="90">
+  </div>
+  <div class="partner-tile">
+    <img src="images/aicte2.jpg" alt="AICTE" loading="lazy" width="140" height="90">
+  </div>
+  <div class="partner-tile">
+    <img src="images/iit.jpeg" alt="IIT" loading="lazy" width="140" height="90">
+  </div>
+</div>
+
+  </section>
+
+  <!-- About Us Section -->
+  <section class="about-section">
+    <div class="about-left">
+      <h2 style="margin-top:0; font-size:1.34rem;">About Us</h2>
+      <span>
+        “This portal is developed under the PM Internship Scheme to ensure fair, transparent, and smart allocation of internships across India. Using AI-powered matchmaking, we connect students, universities, and employers on a single platform.<br><br>
+        Our system not only matches candidates based on skills, qualifications, and preferences, but also ensures rural students, action by giving lakhs opportunities to underrepresented categories (SC/ST/OBC/EWS, women, divyang).<br><br>
+        Through real-time dashboards and reports, the Ministry of Corporate Affairs can monitor allocations with complete transparency and accountability. Our goal is to empower and strengthen every student to get access to industry internships, and employers find the right talent at the right time.”
+      </span>
+    </div>
+    <div class="about-right">
+      <div class="about-quick-links">
+       <div class="about-quick-links">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="student.html">Student</a></li>
+    <li><a href="employers.html">Employers</a></li>
+    <li><a href="university.html">University</a></li>
+    <li><a href="ai.html">AI</a></li>
+    <li><a href="admin.html">Admin</a></li>
+  </ul>
+</div>
+
+      </div>
+      <div class="about-contact">
+        <span class="contact-icon"></span>
+        <a href="mailto:skillin.portal@gmail.com">skillin.portal@gmail.com</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    Copyright © 2025 SkillinBot | Powered by PM Internship Smart Allocation System
+  </footer>
+
+  <script>
+    // Navbar mobile toggle
+    // Navbar mobile toggle
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobileMenu');
+      menu.classList.toggle('hidden');
+    }
+
+    // Modal JS
+    let isSignup = false;
+    function openModal(type) {
+      document.getElementById("authModal").style.display = "flex";
+      isSignup = (type === "signup");
+      updateForm();
+    }
+    function closeModal() {
+      document.getElementById("authModal").style.display = "none";
+    }
+    function toggleForm() {
+      isSignup = !isSignup;
+      updateForm();
+    }
+    function updateForm() {
+      document.getElementById("modalTitle").innerText = isSignup ? "Sign Up" : "Login";
+      document.getElementById("nameField").style.display = isSignup ? "block" : "none";
+      document.querySelector(".toggle-link").innerText =
+        isSignup ? "Already have an account? Login" : "Don't have an account? Sign Up";
+    }
+    window.onclick = function(event) {
+      if (event.target === document.getElementById("authModal")) {
+        closeModal();
+      }
+    }
+     function openComingSoon() {
+    document.getElementById("comingSoonModal").style.display = "flex";
+  }
+  function closeComingSoon() {
+    document.getElementById("comingSoonModal").style.display = "none";
+  }
+    
+    // Login/Signup Success Handling
+document.getElementById("authForm").onsubmit = function(e) {
+  e.preventDefault();
+  
+  const msg = isSignup 
+    ? "🎉 Signup successful! Welcome to Skillin." 
+    : "✅ Login successful! Welcome back.";
+
+  closeModal();
+
+  const successBox = document.getElementById("successMessage");
+  successBox.innerText = msg;
+  successBox.style.display = "block";
+  setTimeout(()=> {
+    successBox.style.display = "none";
+  }, 3000);
+
+  // Hide all Login/Signup buttons (navbar + mobile menu)
+  const navBtn = document.querySelectorAll(".login-signup");
+  navBtn.forEach(btn => btn.style.display = "none");
+};
+
+    // Careers carousel controls
+    let carouselIndex = 0;
+    function slideCarousel(direction) {
+      const track = document.getElementById('trendingCarousel');
+      const cards = track.querySelectorAll('.carousel-card');
+      const cardWidth = cards[0].offsetWidth + 28;
+      carouselIndex += direction;
+      if (carouselIndex < 0) carouselIndex = 0;
+      if (carouselIndex > cards.length - 1) carouselIndex = cards.length - 1;
+      track.style.transform = `translateX(-${carouselIndex * cardWidth}px)`;
+    }
+    // Auto-scroll for trending carousel
+    setInterval(function() {
+      const track = document.getElementById('trendingCarousel');
+      const cards = track.querySelectorAll('.carousel-card');
+      carouselIndex++;
+      if (carouselIndex > cards.length - 1) carouselIndex = 0;
+      const cardWidth = cards[0].offsetWidth + 28;
+      track.style.transform = `translateX(-${carouselIndex * cardWidth}px)`;
+    }, 10000);
+    // --- Demo opportunities ---
+const opportunities = [
+  { id:"I001", type:"Internship", title:"Data Analyst Intern", 
+    skills:["python","sql","excel"], sector:"IT", city:"Mumbai", state:"Maharashtra",
+    capacity:5, categoryPref:"General" },
+
+  { id:"I002", type:"Internship", title:"Frontend Developer Intern", 
+    skills:["html","css","react"], sector:"IT", city:"Delhi", state:"Delhi",
+    capacity:3, categoryPref:"SC/ST" },
+
+  { id:"J001", type:"Job", title:"Finance Associate", 
+    skills:["excel","accounting"], sector:"Finance", city:"Jaipur", state:"Rajasthan",
+    capacity:2, categoryPref:"OBC" }
+];
+const citiesByState = {
+  "Delhi": ["New Delhi", "Dwarka", "Rohini"],
+  "Maharashtra": ["Mumbai", "Pune", "Nagpur"],
+  "Karnataka": ["Bengaluru", "Mysuru", "Mangalore"],
+  "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai"],
+  "Uttar Pradesh": ["Lucknow", "Kanpur", "Noida"],
+  "Rajasthan": ["Jaipur", "Udaipur", "Jodhpur"],
+  "West Bengal": ["Kolkata", "Siliguri", "Howrah"]
+};
+
+function updateCities() {
+  const state = document.getElementById("stuState").value;
+  const cityDropdown = document.getElementById("stuCity");
+  cityDropdown.innerHTML = "<option value=''>Select City</option>";
+  if (citiesByState[state]) {
+    citiesByState[state].forEach(city => {
+      const option = document.createElement("option");
+      option.value = city;
+      option.textContent = city;
+      cityDropdown.appendChild(option);
+    });
+  }
+}
+
+
+function skillMatch(studentSkills, reqSkills){
+  const A = new Set(studentSkills.map(s => s.toLowerCase()));
+  const inter = reqSkills.filter(r => A.has(r.toLowerCase())).length;
+  return reqSkills.length ? inter / reqSkills.length : 0;
+}
+
+function computeScore(student, opp){
+  let score = 0, reasons = [];
+  const wSkill = 0.5, wSector = 0.2, wLocation = 0.15, wAffirm = 0.1, wCapacity = 0.05;
+
+  const sSkill = skillMatch(student.skills, opp.skills);
+  score += sSkill * wSkill * 100;
+  reasons.push(`Skills matched: ${Math.round(sSkill*100)}%`);
+
+  if(student.sectorPref === opp.sector){
+    score += wSector * 100;
+    reasons.push("Sector preference match ✅");
+  }
+
+  if(student.city.toLowerCase() === opp.city.toLowerCase() || 
+     student.state.toLowerCase() === opp.state.toLowerCase()){
+    score += wLocation * 100;
+    reasons.push("Location match ✅");
+  }
+
+  if(student.category === opp.categoryPref){
+    score += wAffirm * 100;
+    reasons.push("Affirmative action preference ✅");
+  }
+
+  if(student.pastParticipation === "false"){
+    score += wCapacity * 100;
+    reasons.push("Eligible (No past internship) ✅");
+  }
+
+  return { score: Math.round(score), reasons };
+}
+
+function matchOpportunities(){
+  const student = {
+    skills: document.getElementById("stuSkills").value.split(",").map(s=>s.trim()).filter(Boolean),
+    city: document.getElementById("stuCity").value.trim(),
+    state: document.getElementById("stuState").value.trim(),
+    sectorPref: document.getElementById("stuSector").value,
+    category: document.getElementById("stuCategory").value,
+    pastParticipation: document.getElementById("stuPast").value
+  };
+
+  const scored = opportunities.map(o => {
+    const { score, reasons } = computeScore(student, o);
+    return { ...o, score, reasons };
+  });
+
+  scored.sort((a,b) => b.score - a.score);
+  const top3 = scored.slice(0,3);
+
+  let html = "";
+  top3.forEach(o => {
+    html += `
+      <div style="background:#f8f8f8;color:#000;padding:12px;margin:12px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.2);">
+        <strong>🏢 ${o.type}: ${o.title}</strong><br>
+        📍 ${o.city}, ${o.state}<br>
+        🎯 <b>Score:</b> ${o.score}/100 <br>
+        💡 Why: ${o.reasons.join(", ")}
+      </div>
+    `;
+  });
+
+  document.getElementById("matchResult").innerHTML = html;
+}
+  </script>
+</body>
+</html>

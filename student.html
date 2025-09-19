@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Skillin Student Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(120deg, #7F5AFF 0%, #260057 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        header {
+            background: rgba(49, 22, 109, 0.93);
+            color: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            padding: 0;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 17px 16px;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.6rem;
+            color: #fff;
+        }
+
+        .logo-icon {
+            display: inline-block;
+            width: 36px;
+            height: 36px;
+            margin-right: 8px;
+            background: url('images/logo.png') no-repeat center/contain;
+        }
+
+        .menu {
+            display: flex;
+            gap: 22px;
+        }
+
+        .menu a {
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            text-decoration: none;
+            padding: 7px 0;
+            transition: color .18s;
+            letter-spacing: 1px;
+        }
+
+        .menu a:hover {
+            color: #caa7ff;
+        }
+
+        .navbar-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background: linear-gradient(90deg, #724afd, #a18ff1);
+            color: #fff;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 7px;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px #724afd54;
+        }
+
+        /* Hamburger Menu Styles */
+        .hamburger-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            z-index: 30;
+        }
+
+        .hamburger-menu .bar {
+            width: 25px;
+            height: 3px;
+            background-color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(49, 22, 109, 0.98);
+            z-index: 25;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .mobile-menu a {
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .mobile-menu a:hover {
+            color: #a18ff1;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1180px;
+            margin: 38px auto 65px auto;
+            padding: 0 15px;
+        }
+
+        .section-box {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 5px 25px rgba(127, 90, 255, 0.25);
+            padding: 28px 22px;
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #000000;
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 22px;
+            letter-spacing: .7px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .section-title .icon-title {
+            font-size: 30px;
+            background: linear-gradient(90deg, #7F5AFF, #a18ff1);
+            color: #fff;
+            border-radius: 10px;
+            padding: 8px 12px;
+            box-shadow: 0 3px 10px rgba(127, 90, 255, 0.3);
+        }
+
+        .card-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 22px #7f5aff2a;
+            min-width: 200px;
+            max-width: 270px;
+            flex: 1 1 210px;
+            padding: 23px 20px;
+            margin-bottom: 13px;
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            transition: box-shadow .18s;
+        }
+
+        .card:hover {
+            box-shadow: 0 7px 32px #7f5aff47;
+        }
+
+        .card .card-icon {
+            font-size: 29px;
+            padding: 6px 8px;
+            background: linear-gradient(90deg, #7F5AFF 50%, #a18ff1 100%);
+            color: #fff;
+            border-radius: 7px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 7px #7f5aff24;
+        }
+
+        .card .role {
+            font-weight: 700;
+            font-size: 18px;
+            color: #260057;
+        }
+
+        .card .location,
+        .card .desc,
+        .card .tip {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+
+        .card .apply-btn {
+            background: linear-gradient(90deg, #724afd, #a18ff1);
+            color: #fff;
+            border: none;
+            padding: 7px 0;
+            border-radius: 7px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            width: 93px;
+            margin-top: 12px;
+            box-shadow: 0 2px 6px #7f5aff36;
+            transition: background .13s;
+        }
+
+        .companies-row {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            margin-bottom: 13px;
+        }
+
+        .company-card {
+            background: #fff;
+            border-radius: 13px;
+            box-shadow: 0 2px 10px #7f5aff39;
+            min-width: 113px;
+            max-width: 150px;
+            text-align: center;
+            padding: 15px 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1 1 113px;
+        }
+
+        .company-card img {
+            height: 34px;
+            margin-bottom: 7px;
+            max-width: 100%;
+        }
+
+        .company-name {
+            font-weight: 700;
+            color: #260057;
+            font-size: 15px;
+        }
+
+        .advice-row {
+            display: flex;
+            gap: 21px;
+            flex-wrap: wrap;
+        }
+
+        .advice-card {
+            background: #fff;
+            border-radius: 13px;
+            box-shadow: 0 2px 10px #a18ff131;
+            min-width: 185px;
+            max-width: 250px;
+            padding: 18px 13px;
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            font-size: 16px;
+            color: #392b7a;
+            font-weight: 600;
+            margin-bottom: 7px;
+            flex: 1 1 185px;
+        }
+
+        .advice-icon {
+            font-size: 25px;
+            margin-bottom: 8px;
+        }
+
+        .form-section {
+            background: #fff;
+            border-radius: 17px;
+            box-shadow: 0 2px 16px #7f5aff31;
+            max-width: 620px;
+            margin: 37px auto 17px auto;
+            padding: 30px 32px;
+        }
+
+        .form-title {
+            color: #7F5AFF;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        #student-form label {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 6px;
+            display: block;
+            color: #260057;
+        }
+
+        #student-form input[type="text"],
+        #student-form select,
+        #student-form textarea,
+        #student-form input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 7px;
+            border: 1.3px solid #ecd3ff;
+            font-size: 16px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            background: #f8f7ff;
+        }
+
+        #student-form textarea {
+            height: 44px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .form-row>div {
+            flex: 1;
+        }
+
+        .radio-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .radio-row label {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: normal;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            display: none;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            top: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch input:checked+.slider {
+            background-color: #7F5AFF;
+        }
+
+        .toggle-switch input:checked+.slider:before {
+            transform: translateX(22px);
+        }
+
+        .file-label {
+            display: inline-block;
+            background: linear-gradient(90deg, #7f5aff, #a18ff1);
+            color: #fff;
+            border-radius: 7px;
+            padding: 8px 14px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 2px 6px #724afd39;
+        }
+
+        #cv {
+            display: none;
+        }
+
+        #file-chosen {
+            font-size: 13px;
+            color: #6121C5;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .form-row,
+        .radio-row,
+        .toggle-row {
+            margin-bottom: 15px;
+        }
+
+        .form-btn {
+            background: linear-gradient(90deg, #724afd, #a18ff1);
+            color: #fff;
+            border: none;
+            padding: 13px 0;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 1px 8px #724afd32;
+            margin-top: 7px;
+            letter-spacing: 1px;
+        }
+
+        .form-msg {
+            margin-top: 8px;
+            font-size: 15px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .form-msg.success {
+            background: #e8fbae;
+            color: #236b2e;
+        }
+
+        .form-msg.error {
+            background: #fdeed9;
+            color: #d16c21;
+        }
+
+        .about-section {
+            display: flex;
+            gap: 2rem;
+            background: linear-gradient(135deg, #3e2277 20%, #190e37 70%);
+            margin: 2.2rem auto 0 auto;
+            padding: 2.7rem 2rem;
+            border-radius: 29px;
+            max-width: 1100px;
+            color: #fff;
+            box-shadow: 0 5px 32px rgba(64, 17, 87, 0.15);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .about-left {
+            flex: 2.2;
+            font-size: 1rem;
+            font-weight: 400;
+            color: #e9e6f4;
+            margin-right: 1.6rem;
+            min-width: 180px;
+        }
+
+        .about-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.02rem;
+            min-width: 120px;
+            align-items: flex-start;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .about-quick-links {
+            margin-top: 0.18rem;
+        }
+
+        .about-quick-links ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 1.12rem;
+        }
+
+        .about-quick-links ul li {
+            margin-bottom: 0.34rem;
+            padding: 0.15rem 0;
+            padding-left: 0.07rem;
+            border-radius: 5px;
+            transition: background 0.13s;
+            cursor: pointer;
+        }
+
+        .about-quick-links ul li:hover {
+            background: #8233c2;
+        }
+
+        .about-contact {
+            display: flex;
+            align-items: center;
+            margin-top: 1.2rem;
+            font-size: 1.07rem;
+        }
+
+        .about-contact .contact-icon {
+            width: 24px;
+            height: 24px;
+            background: url('https://img.icons8.com/fluency/48/email-open.png') no-repeat center/contain;
+            margin-right: 0.7rem;
+        }
+
+        .about-contact a {
+            color: #fab7fc;
+            font-weight: bold;
+            letter-spacing: 0.4px;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 1rem;
+            background: linear-gradient(120deg, #512e8f 38%, #431a73 62%, #a678ff 100%);
+            color: #fff;
+            padding: 1rem 0;
+            border-radius: 24px 24px 0 0;
+            margin-top: 2.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Responsive Media Queries */
+        @media (max-width: 900px) {
+            .about-section {
+                flex-direction: column;
+                padding: 2rem 1rem;
+                gap: 0.9rem;
+                max-width: 95vw;
+            }
+
+            .about-left {
+                margin-right: 0;
+            }
+
+            .about-right {
+                min-width: 80px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar .menu, .navbar-right {
+                display: none;
+            }
+
+            .hamburger-menu {
+                display: flex;
+            }
+            
+            .navbar-left {
+                gap: 10px;
+            }
+
+            .logo-icon {
+                width: 30px;
+                height: 30px;
+                margin-right: 5px;
+            }
+            
+            .navbar .logo {
+                font-size: 1.4rem;
+            }
+
+            main {
+                margin: 20px auto 40px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="navbar-left">
+                <div class="logo">
+                    <span class="logo-icon"></span>
+                    Skillin
+                </div>
+                <div class="menu">
+                    <a href="index.html">Home</a>
+                    <a href="#">Student</a>
+                    <a href="employers.html">Employers</a>
+                    <a href="ai.html">AI</a>
+                    <a href="university.html">University</a>
+                    <a href="admin.html">Admin/Govt</a>
+                </div>
+            </div>
+           <!-- <div class="navbar-right">
+                <button class="nav-btn">Login</button>
+                <button class="nav-btn">Sign Up</button>
+            </div>-->
+            <div class="hamburger-menu" onclick="toggleMenu()">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </nav>
+        <div class="mobile-menu" id="mobile-menu">
+            <a href="index.html">Home</a>
+            <a href="#">Student</a>
+            <a href="employers.html">Employers</a>
+            <a href="ai.html">AI</a>
+            <a href="university.html">University</a>
+            <a href="admin.html">Admin/Govt</a>
+            <!--
+           <button class="nav-btn" style="width: 150px;">Login</button>
+            <button class="nav-btn" style="width: 150px;">Sign Up</button>
+        -->
+        </div>
+    </header>
+    <main>
+        <div class="section-title">
+            <span class="icon-title">💼</span> Job/Internship Suggestions
+        </div>
+        <div class="card-row">
+            <div class="card">
+                <span class="card-icon">💻</span>
+                <div class="role">Software Developer</div>
+                <div class="location">Delhi NCR</div>
+                <button class="apply-btn">Apply</button>
+            </div>
+            <div class="card">
+                <span class="card-icon">📊</span>
+                <div class="role">Finance Analyst</div>
+                <div class="location">Mumbai</div>
+                <button class="apply-btn">Apply</button>
+            </div>
+            <div class="card">
+                <span class="card-icon">🌾</span>
+                <div class="role">Agri-Tech Intern</div>
+                <div class="location">Punjab</div>
+                <button class="apply-btn">Apply</button>
+            </div>
+            <div class="card">
+                <span class="card-icon">🩺</span>
+                <div class="role">Healthcare Assistant</div>
+                <div class="location">Kolkata</div>
+                <button class="apply-btn">Apply</button>
+            </div>
+           <div id="apply-msg" style="display:none; margin-top:15px; text-align:center; font-weight:bold; color:rgb(31, 229, 13); font-size:24px;">
+    🚀  Jobs/Internships are coming Soon. Stay Tuned!!
+</div>
+        </div>
+        <div class="section-title">
+            <span class="icon-title">🏢</span> Who's Hiring
+        </div>
+        <div class="companies-row">
+            <div class="company-card">
+                <img src="images/microsoft.png" alt="Microsoft">
+                <div class="company-name">Microsoft</div>
+            </div>
+            <div class="company-card">
+                <img src="images/google.webp" alt="Google">
+                <div class="company-name">Google</div>
+            </div>
+            <div class="company-card">
+                <img src="images/Amazon_logo.svg" alt="Amazon">
+                <div class="company-name">Amazon</div>
+            </div>
+            <div class="company-card">
+                <img src="images/infosys.png" alt="Infosys">
+                <div class="company-name">Infosys</div>
+            </div>
+            <div class="company-card">
+                <img src="images/tcs.jpeg" alt="TCS">
+                <div class="company-name">TCS</div>
+            </div>
+        </div>
+        <div class="section-title">
+            <span class="icon-title">💡</span> Career Advice
+        </div>
+        <div class="advice-row">
+            <div class="advice-card">
+                <span class="advice-icon">📝</span>
+                <span class="tip">Create a custom CV for every role you apply.</span>
+            </div>
+            <div class="advice-card">
+                <span class="advice-icon">🤝</span>
+                <span class="tip">Network with industry mentors and alumni on LinkedIn.</span>
+            </div>
+            <div class="advice-card">
+                <span class="advice-icon">💬</span>
+                <span class="tip">Practice mock interviews for confidence and feedback.</span>
+            </div>
+            <div class="advice-card">
+                <span class="advice-icon">🤖</span>
+                <span class="tip">
+  <a href="ai.html">AI-powered career suggestions to help students find the best opportunities aligned with their skills and interests.</a>
+</span>
+
+            </div>
+        </div>
+        <section class="form-section">
+            <div class="form-title">Student Details</div>
+            <form id="student-form" enctype="multipart/form-data" novalidate>
+                <label for="name">Name *</label>
+                <input type="text" id="name" name="name" required autocomplete="off">
+                <label for="skills">Skills *</label>
+                <textarea id="skills" name="skills" required placeholder="e.g. Python, Data Analysis, Public Speaking"></textarea>
+                <div class="form-row">
+                    <div>
+                        <label for="prefLocation">Preferred Location *</label>
+                        <input type="text" id="prefLocation" name="prefLocation" required>
+                    </div>
+                    <div>
+                        <label for="sector">Sector Interest *</label>
+                        <select id="sector" name="sector" required>
+                            <option value="">Select Sector</option>
+                            <option>IT</option>
+                            <option>Finance</option>
+                            <option>Agriculture</option>
+                            <option>Healthcare</option>
+                            <option>Education</option>
+                            <option>Design</option>
+                            <option>Law</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div>
+                        <label for="region">Region *</label>
+                        <select id="region" name="region" required>
+                            <option value="">Select Region</option>
+                            <option>North</option>
+                            <option>South</option>
+                            <option>East</option>
+                            <option>West</option>
+                            <option>Central</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="caste">Caste *</label>
+                        <select id="caste" name="caste" required>
+                            <option value="">Select Caste</option>
+                            <option>General</option>
+                            <option>OBC</option>
+                            <option>SC</option>
+                            <option>ST</option>
+                            <option>EWS</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div>
+                        <label>Gender *</label>
+                        <div class="radio-row">
+                            <label><input type="radio" name="gender" value="Male" required> Male</label>
+                            <label><input type="radio" name="gender" value="Female" required> Female</label>
+                            <label><input type="radio" name="gender" value="Other" required> Other</label>
+                        </div>
+                    </div>
+                    <div>
+                        <label>Specially Abled *</label>
+                        <div class="toggle-row">
+                            <label class="toggle-switch">
+                                <input type="checkbox" name="abled" id="abled">
+                                <span class="slider"></span>
+                            </label>
+                            <span id="abled-status">No</span>
+                        </div>
+                    </div>
+                </div>
+                <label for="district">District *</label>
+                <input type="text" id="district" name="district" required>
+                <label for="cv" class="file-label">Upload CV *</label>
+                <input type="file" id="cv" name="cv" accept=".pdf,.doc,.docx" required>
+                <div id="file-chosen"></div>
+                <div class="radio-row">
+                    <label>Past Participant? *</label>
+                    <label><input type="radio" name="past" value="Yes" required>Yes</label>
+                    <label><input type="radio" name="past" value="No" required>No</label>
+                </div>
+                <button type="submit" class="form-btn">Submit Details</button>
+                <div class="form-msg success" id="form-success"></div>
+                <div class="form-msg error" id="form-error"></div>
+            </form>
+        </section>
+        </main>
+    <section class="about-section">
+        <div class="about-left">
+            <h2 style="margin-top:0; font-size:1.34rem;">About Us</h2>
+            <span>
+                “This portal is developed under the PM Internship Scheme to ensure fair, transparent, and smart allocation of internships across India. Using AI-powered matchmaking, we connect students, universities, and employers on a single platform.<br><br>
+                Our system not only matches candidates based on skills, qualifications, and preferences, but also ensures rural students, action by giving lakhs opportunities to underrepresented categories (SC/ST/OBC/EWS, women, divyang).<br><br>
+                Through real-time dashboards and reports, the Ministry of Corporate Affairs can monitor allocations with complete transparency and accountability. Our goal is to empower and strengthen every student to get access to industry internships, and employers find the right talent at the right time.”
+            </span>
+        </div>
+        <div class="about-right">
+            <div class="about-quick-links">
+                <div class="about-quick-links">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="student.html">Student</a></li>
+                        <li><a href="employers.html">Employers</a></li>
+                        <li><a href="university.html">University</a></li>
+                        <li><a href="ai.html">AI</a></li>
+                        <li><a href="admin.html">Admin</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="about-contact">
+                <span class="contact-icon"></span>
+                <a href="mailto:skillin.portal@gmail.com">skillin.portal@gmail.com</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        Copyright © 2025 SkillinBot | Powered by PM Internship Smart Allocation System
+    </footer>
+    <script>
+        function toggleMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu.style.display === 'flex') {
+                mobileMenu.style.display = 'none';
+            } else {
+                mobileMenu.style.display = 'flex';
+            }
+        }
+        document.getElementById('abled').addEventListener('change', function() {
+            document.getElementById('abled-status').innerText = this.checked ? 'Yes' : 'No';
+        });
+        document.getElementById('cv').addEventListener('change', function() {
+            const fileName = this.files.length > 0 ? this.files[0].name : 'No file chosen';
+            document.getElementById('file-chosen').innerText = fileName;
+        });
+        document.getElementById('student-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var form = e.target, valid = true, errorMsg = '';
+            function showError(msg) {
+                document.getElementById('form-success').style.display = 'none';
+                document.getElementById('form-error').style.display = 'block';
+                document.getElementById('form-error').innerText = msg;
+                setTimeout(() => { document.getElementById('form-error').style.display = 'none' }, 3000);
+            }
+            function showSuccess(msg) {
+                document.getElementById('form-error').style.display = 'none';
+                document.getElementById('form-success').style.display = 'block';
+                document.getElementById('form-success').innerText = msg;
+                setTimeout(() => { document.getElementById('form-success').style.display = 'none' }, 3000);
+            }
+            if (form.name.value.trim() === '') return showError('Please enter your name.');
+            if (form.skills.value.trim() === '') return showError('Please enter your skills.');
+            if (form.prefLocation.value.trim() === '') return showError('Enter a preferred location.');
+            if (form.sector.value === '') return showError('Select sector interest.');
+            if (form.region.value === '') return showError('Select region.');
+            if (form.caste.value === '') return showError('Select caste.');
+            if (!form.gender.value) return showError('Select gender.');
+            if (form.district.value.trim() === '') return showError('Enter your district.');
+            if (!form.cv.files.length) return showError('Upload your CV.');
+            var fileName = form.cv.files[0].name;
+            var ext = fileName.split('.').pop().toLowerCase();
+            if (['pdf', 'doc', 'docx'].indexOf(ext) === -1) return showError('CV must be PDF, DOC or DOCX.');
+            if (form.cv.files[0].size > 2 * 1024 * 1024) return showError('CV must be below 2MB.');
+            if (!form.past.value) return showError('Select Past Participant status.');
+            showSuccess('Details submitted successfully!');
+            form.reset();
+            document.getElementById('abled-status').innerText = 'No';
+            document.getElementById('file-chosen').innerText = '';
+        });
+        // Apply button click par message show karna
+document.querySelectorAll('.apply-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+        const msgBox = document.getElementById('apply-msg');
+        msgBox.style.display = 'block';
+        setTimeout(() => {
+            msgBox.style.display = 'none';
+        }, 2500); // 2.5 sec baad hide ho jaayega
+    });
+});
+
+    </script>
+</body>
+</html>

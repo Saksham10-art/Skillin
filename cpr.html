@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Career Path Recommendation</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #4b2ca0, #7b3cff);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 100vh;
+    }
+    /* Navbar */
+    .navbar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.7rem 2rem;
+      background: rgba(30, 24, 58, 0.92);
+      position: sticky;
+      top: 0;
+      z-index: 99;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.6rem;
+      color: #fff;
+    }
+    .logo-icon {
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      margin-right: 8px;
+      background: url('images/logo.png') no-repeat center/contain;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.2rem;
+    }
+    .nav-links a {
+      color: #e4d9d9;
+      font-size: 1.08rem;
+      padding: 0.5rem 1rem;
+      border-radius: 15px;
+      transition: background 0.23s;
+    }
+    .nav-links a:hover {
+      background: #7855db;
+      color: #fff;
+    }
+    .lang-switch {
+      background: transparent;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1.08rem;
+    }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 5px;
+    }
+    .hamburger span {
+      display: block;
+      width: 25px;
+      height: 3px;
+      background: #fff;
+      border-radius: 2px;
+    }
+
+    /* Page Header */
+    .page-header {
+      color: #000;
+      text-align: center;
+      padding: 20px;
+      width: 100%;
+    }
+    .page-header h1 {
+      margin: 0;
+      font-size: 50px;
+    }
+    .page-header p {
+      margin: 5px 0 0;
+      font-size: 26px;
+      opacity: 0.9;
+    }
+
+    /* Career Path */
+    #career-path {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      margin-top: 30px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 800px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    #career-path h2 {
+      margin-bottom: 20px;
+      font-size: 35px;
+      color: #efe9f6;
+    }
+    #skillsInput {
+      width: 90%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      outline: none;
+      font-size: 15px;
+    }
+    button {
+      background: #7b3cff;
+      color: #fff;
+      padding: 12px 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.2s ease;
+    }
+    button:hover {
+      background: #9b6dff;
+    }
+    #careerResult {
+      margin-top: 20px;
+      text-align: left;
+    }
+    .career-card {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .career-card strong { color: #ffddff; }
+    .career-card .matched { color: #9effa9; }
+    .career-card .missing { color: #ff9e9e; }
+
+    /* Footer */
+    footer {
+      width: 100%;
+      background: rgba(120, 80, 240, 0.85);
+      color: #f0e9ff;
+      margin-top: 60px;
+      padding: 40px 10vw;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 30px;
+      box-sizing: border-box;
+    }
+    footer section { flex: 1 1 280px; min-width: 220px; }
+    footer h3 { margin: 0 0 12px; color: #d6caff; }
+    footer p, footer li, footer a { color: #e3dbff; line-height: 1.5; }
+    .footer-bottom {
+      width: 100%;
+      text-align: center;
+      padding: 18px 0 10px 0;
+      font-size: 13px;
+      color: #ddd7ff;
+      background: rgba(90, 40, 180, 0.8);
+      margin-top: 30px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .nav-links { display: none; flex-direction: column; width: 100%; background: rgba(30,24,58,0.95); position: absolute; top: 60px; left: 0; }
+      .nav-links.active { display: flex; }
+      .hamburger { display: flex; }
+      .page-header h1 { font-size: 32px; }
+      .page-header p { font-size: 18px; }
+    }
+    @media (max-width: 600px) {
+      #career-path h2 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">
+      <span class="logo-icon"></span>
+      Skillin
+    </div>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="nav-links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="student.html">Student</a>
+      <a href="employers.html">Employers</a>
+      <a href="ai.html">AI</a>
+      <a href="university.html">University</a>
+      <a href="admin.html">Admin/Govt</a>
+    </div>
+    <button class="lang-switch"></button>
+  </nav>
+
+  <div class="page-header">
+    <h1>🤖 Career Path Recommendation</h1>
+    <p>Get your recommendation now about skills, internships, or future jobs</p>
+  </div>
+
+  <div id="career-path">
+    <h2>Career Path Recommendation</h2>
+    <input id="skillsInput" type="text" placeholder="Enter your skills (comma separated)">
+    <br>
+    <button onclick="recommendCareer()">Get Recommendation</button>
+    <div id="careerResult"></div>
+  </div>
+
+  <footer>
+    <section>
+      <h3>About Us</h3>
+      <p>This portal utilizes AI technology to guide students toward promising career paths and internship opportunities.</p>
+    </section>
+    <section>
+      <h3>Features</h3>
+      <ul>
+        <li><a href="Ai.html">Ai</a></li>
+        <li><a href="cpr.html">Career Path Recommendation</a></li>
+        <li><a href="matchup.html">Matching Up</a></li>
+        <li><a href="skillgap.html">Skill Gap Advice</a></li>
+        <li><a href="chatbot.html">Chatbot Support</a></li>
+      </ul>
+    </section>
+    <section>
+      <h3>Contact</h3>
+      <p>Email: <a href="mailto:skillin.portal@gmail.com">skillin.portal@gmail.com</a></p>
+    </section>
+    <div class="footer-bottom">
+      &copy; 2025 SkillinBot | Powered by PM Internship Smart Allocation System
+    </div>
+  </footer>
+
+  <script>
+    const careerPaths = [
+      { name: "Data Analyst / Data Scientist", skills: ["python","sql","excel","powerbi"] },
+      { name: "Frontend Developer", skills: ["html","css","javascript","react"] },
+      { name: "Backend Developer", skills: ["java","spring","mysql","api"] },
+      { name: "Embedded Systems Engineer", skills: ["c","c++","microcontroller","embedded"] },
+      { name: "Cloud Engineer / DevOps", skills: ["aws","docker","kubernetes","linux"] }
+    ];
+
+    function recommendCareer(){
+      const input = document.getElementById("skillsInput").value
+        .toLowerCase().split(",").map(s => s.trim());
+
+      let scores = careerPaths.map(path => {
+        const matched = path.skills.filter(s => input.includes(s));
+        const score = Math.round((matched.length / path.skills.length) * 100);
+        const missing = path.skills.filter(s => !input.includes(s));
+        return { ...path, matched, score, missing };
+      });
+
+      scores.sort((a,b) => b.score - a.score);
+      const top2 = scores.slice(0,2);
+
+      let html = "";
+      top2.forEach(path => {
+        html += `
+          <div class="career-card">
+            <strong>🚀 Career Path:</strong> ${path.name}<br>
+            <strong>Score:</strong> ${path.score}%<br>
+            ✅ <span class="matched">Matched Skills:</span> ${path.matched.join(", ") || "None"}<br>
+            ⚡ <span class="missing">Missing Skills:</span> ${path.missing.join(", ") || "None"}<br>
+          </div>
+        `;
+      });
+
+      document.getElementById("careerResult").innerHTML = html;
+    }
+
+    // Enter key trigger
+    document.getElementById("skillsInput").addEventListener("keypress", function(e){
+      if(e.key === "Enter"){ e.preventDefault(); recommendCareer(); }
+    });
+
+    // Hamburger toggle
+    document.getElementById("hamburger").addEventListener("click", function(){
+      document.getElementById("nav-links").classList.toggle("active");
+    });
+  </script>
+</body>
+</html>

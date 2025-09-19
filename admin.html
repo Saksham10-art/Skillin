@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skillin Admin/Govt Panel</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto', Arial, sans-serif;
+      background: linear-gradient(135deg,#7F5AFF 0%, #6952F1 45%, #260057 100%);
+      min-height: 100vh;
+      color: #333;
+    }
+    header {
+      background: rgba(49,22,109,0.92);
+      color: #fff;
+      padding: 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    #heatmap {
+      height: 300px;
+      border-radius: 10px;
+      margin-top: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 16px 12px;
+    }
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .navbar .logo {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.6rem;
+      color: #fff;
+    }
+    .logo-icon {
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      margin-right: 8px;
+      background: url('images/logo.png') no-repeat center/contain;
+    }
+    .menu {
+      display: flex;
+      gap: 24px;
+    }
+    .menu a {
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      text-decoration: none;
+      transition: color 0.18s;
+      padding:6px 7px;
+    }
+    .menu a:hover {
+      color: #caa7ff;
+    }
+    .navbar-right {
+      display: flex;
+      gap: 10px;
+      align-items:center;
+    }
+    .nav-btn {
+      background: linear-gradient(90deg,#724afd,#a18ff1);
+      color: #fff;
+      border: none;
+      padding: 7px 16px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 2px 6px #724afd69;
+    }
+    main {
+      max-width: 1180px;
+      margin: 32px auto 60px auto;
+      padding: 0 18px;
+    }
+    h2 { color: #7F5AFF; margin:32px 0 14px 0; font-size:23px;}
+    section {
+      background: rgba(255,255,255,0.97);
+      border-radius: 15px;
+      box-shadow: 0 2px 16px #523ea080;
+      margin-bottom: 32px;
+      padding: 34px 24px;
+    }
+    button, select, input[type="range"] {
+      background: linear-gradient(90deg,#724afd,#a18ff1);
+      color: #fff; border: none; padding: 7px 17px; border-radius: 7px;
+      font-weight: bold; font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 6px; margin-top: 7px;
+      box-shadow: 0 1px 5px #724afd92;
+    }
+    input, select, textarea {
+      padding: 9px; border-radius: 5px; border: 1px solid #ddd; font-size: 16px;
+      margin-bottom: 10px; width:100%;
+      box-sizing:border-box;
+    }
+    /* Improved table styling and alignment */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: #f8f7ff;
+      table-layout: fixed;
+    }
+    th, td {
+      padding: 12px 7px;
+      border-bottom: 1px solid #e2dffd;
+      text-align: left;
+      font-size:15px;
+    }
+    th {
+      background: #7f5aff22;
+      color: #392b7a;
+      font-weight:600;
+    }
+    tr {display: table-row;}
+    .status-open { color: #7F5AFF; font-weight: bold; }
+    .status-progress { color: #FFB845; font-weight: bold; }
+    .status-resolved { color: #2ac37f; font-weight: bold; }
+    .icon-open::before {content:'\2b24';font-size:20px;}
+    .icon-progress::before {content:'\1f7e1';font-size:20px;}
+    .icon-resolved::before {content:'\2705';font-size:20px;}
+    /* Ticket system container flexbox alignment */
+    #tickets-table tbody tr td, #tickets-table thead tr th {
+      vertical-align: middle;
+    }
+    #complaint-form {
+      max-width:332px;
+      margin-bottom:13px;
+      display:flex;
+      flex-direction:column;
+      gap:7px;
+    }
+    .dashboard-charts {display:grid; gap:24px; grid-template-columns:repeat(auto-fit,minmax(310px,1fr));margin-top:22px;}
+    .heatmap-placeholder {
+      background:#f7f1ff; border-radius:10px; height:210px; display:flex;
+      align-items:center; justify-content:center; color:#7f5aff; font-size:17px;
+      font-weight:600; box-shadow: 0 2px 10px #7f5aff29; margin-top:10px;
+    }
+    .stats-cards {
+      display:flex; gap:20px; flex-wrap:wrap; margin-top:12px;
+    }
+    .card-stat {
+      flex: 1; min-width: 170px;
+      background: linear-gradient(110deg,#9a78fc88,#f8f7ff 85%);
+      border-radius:10px; padding:14px;
+      font-weight:700; color:#362c59; font-size:22px;
+      box-shadow: 0 2px 10px #7f5aff39;
+      text-align:center;
+    }
+    .export-btns {display:flex; gap:10px;}
+    .control-panel {display:flex; gap:22px; flex-wrap:wrap; align-items:center;}
+    .control-group {background:#eee9fd; padding:11px 18px; border-radius:8px;}
+    .slider-label {font-size:14px; color:#362c59;}
+    .switch input {display:none;}
+    .switch {display:inline-block; vertical-align:middle;}
+    .switch {
+      display: inline-block;
+      position: relative;
+      width: 44px;
+      height: 24px;
+    }
+    .info.legend {
+      background: white;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      line-height: 16px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.35);
+    }
+    .info.legend h4 {
+      margin: 0 0 4px;
+      font-size: 13px;
+      color: #333;
+      font-weight: 600;
+    }
+
+
+    .switch input {
+      display: none;
+    }
+
+    .switch span {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0;
+      right: 0; bottom: 0;
+      background: #bbb;
+      border-radius: 34px;
+      transition: background 0.3s;
+    }
+
+    .switch span:before {
+      content: "";
+      position: absolute;
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      top: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+
+    .switch input:checked + span {
+      background: #7F5AFF;
+    }
+
+    .switch input:checked + span:before {
+      transform: translateX(20px);
+    }
+
+    .success-box, .error-box {
+      margin: 0 0 9px 0;
+      padding: 9px 14px;
+      border-radius: 7px;
+      font-weight: 600;
+      font-size:15px;
+      display:none;
+    }
+    .success-box {
+      background:#e8fbae;color:#236b2e;border:1.5px solid #65be6c;
+    }
+    .error-box {
+      background:#fdeed9;color:#d16c21;border:1.5px solid #ffa479;
+    }
+    @media (max-width:900px){
+      .hamburger-icon { display: flex; }
+      .menu { display: none; width:100%; }
+      .menu.active {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: rgba(49,22,109,0.92);
+        position: absolute;
+        left: 0;
+        top: 75px;
+        width: 100%;
+        padding: 10px 0;
+        z-index: 999;
+      }
+      .menu a { padding: 10px 0; width:90%; text-align:center; }
+      .navbar-left { flex-grow: 1; justify-content: space-between; gap:0; }
+      .navbar { flex-wrap: wrap; }
+      .navbar-right { margin-top:0; }
+    }
+    @media (max-width:700px){
+      main{padding:0 3px;}
+      section{padding:20px 7px;}
+    }
+    @media (max-width:500px){
+      h2{font-size:17px;}
+      .card-stat{font-size:15px; padding:9px;}
+      .dashboard-charts{gap:10px;}
+    }
+    /* About Us style from homepage */
+    .about-section {
+      display: flex;
+      gap: 2rem;
+      background: linear-gradient(135deg, #3e2277 20%, #190e37 70%);
+      margin: 2.2rem auto 0 auto;
+      padding: 2.7rem 2rem;
+      border-radius: 29px;
+      max-width: 1100px;
+      color: #fff;
+      box-shadow: 0 5px 32px rgba(64,17,87,0.15);
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .about-left {
+      flex: 2.2;
+      font-size: 1rem;
+      font-weight: 400;
+      color: #e9e6f4;
+      margin-right: 1.6rem;
+      min-width: 180px;
+    }
+    .about-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.02rem;
+      min-width: 120px;
+      align-items: flex-start;
+      font-weight: 600;
+      color: #fff;
+    }
+    .about-quick-links { margin-top: 0.18rem; }
+    .about-quick-links ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 1.12rem;
+      color: white;
+    }
+    .about-quick-links ul li {
+      margin-bottom: 0.34rem;
+      padding: 0.15rem 0;
+      padding-left: 0.07rem;
+      border-radius: 5px;
+      transition: background 0.13s;
+      cursor: pointer;
+      color: #ede7e7;
+    }
+    .about-quick-links ul li:hover {
+      background: #b77ae8;
+    }
+    .about-contact {
+      display: flex;
+      align-items: center;
+      margin-top: 1.2rem;
+      font-size: 1.07rem;
+    }
+    .about-contact .contact-icon {
+      width: 24px;
+      height: 24px;
+      background: url('https://img.icons8.com/fluency/48/email-open.png') no-repeat center/contain;
+      margin-right: 0.7rem;
+    }
+    .about-contact a {
+      color: #fab7fc;
+      font-weight: bold;
+      letter-spacing: 0.4px;
+    }
+    @media (max-width: 900px) {
+      .about-section {
+        flex-direction: column;
+        padding: 2rem 1rem;
+        gap: 0.9rem;
+        max-width: 95vw;
+      }
+      .about-left { margin-right: 0; }
+      .about-right { min-width: 80px; }
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      font-size: 1rem;
+      background: linear-gradient(120deg, #512e8f 38%, #431a73 62%, #a678ff 100%);
+      color: #fff;
+      padding: 1rem 0;
+      border-radius: 24px 24px 0 0;
+      margin-top: 2.5rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* Utilities */
+    .hidden { display: none !important; }
+
+    /* Hamburger menu styles */
+   /* Hamburger menu styles */
+.hamburger-icon {
+  display: none; /* default desktop pe hidden */
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25px;
+  height: 20px;
+  cursor: pointer;
+  z-index: 1001;
+}
+.hamburger-icon span {
+  display: block;
+  height: 3px;
+  background: #fff;
+  border-radius: 3px;
+}
+
+/* 📱 Mobile + Tablet ke liye visible karo */
+@media (max-width: 900px) {
+  .hamburger-icon {
+    display: flex; /* ab dikh jaayega */
+  }
+  .menu {
+    display: none;
+    width: 100%;
+  }
+  .menu.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(49,22,109,0.92);
+    position: absolute;
+    left: 0;
+    top: 75px;
+    width: 100%;
+    padding: 10px 0;
+    z-index: 999;
+  }
+  .menu a {
+    padding: 10px 0;
+    width: 90%;
+    text-align: center;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="navbar-left">
+        <div class="logo">
+          <img src="images/logo.png" alt="Skillin Logo" width="40" height="40">
+          <span>Skillin</span>
+        </div>
+        <div class="hamburger-icon" id="hamburger-btn" aria-label="Toggle Navigation Menu" role="button" tabindex="0">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="menu" id="nav-menu">
+          <a href="index.html">Home</a>
+          <a href="student.html">Student</a>
+          <a href="employers.html">Employers</a>
+          <a href="ai.html">AI</a>
+          <a href="university.html">University</a>
+          <a href="#">Admin/Govt</a>
+        </div>
+      </div>
+      <div class="navbar-right">
+        <button class="nav-btn" onclick="showLogin()" aria-label="Login to Admin Panel">Login</button>
+        <button class="nav-btn" onclick="showSignup()" aria-label="Signup for Admin Panel">Sign Up</button>
+      </div>
+    </nav>
+  </header>
+  <main>
+    
+     <section>
+      <h2>Audit & Transparency</h2>
+      <div>Every allocation is locked and verified. Govt can show public audit reports.</div>
+      <button onclick="showAlertBox('Showing public reports...','success')" aria-label="View Public Reports">View Public Reports</button>
+      <div class="success-box" id="audit-success"></div>
+      <table aria-label="Audit Report Table">
+        <thead>
+          <tr>
+            <th scope="col">Student</th>
+            <th scope="col">Allocated Industry</th>
+            <th scope="col">Status</th>
+            <th scope="col">Verified</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Rahul Verma</td>
+            <td>IT</td>
+            <td>Completed</td>
+            <td>&#10004;</td>
+          </tr>
+          <tr>
+            <td>Priya Nair</td>
+            <td>Finance</td>
+            <td>In Progress</td>
+            <td>&#10004;</td>
+          </tr>
+          <tr>
+            <td>Manoj Rao</td>
+            <td>Agriculture</td>
+            <td>Offered</td>
+            <td>&#10006;</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Grievance Redressal (Ticket System)</h2>
+      <form id="complaint-form">
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" placeholder="Name" required aria-required="true">
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="Email" required aria-required="true">
+
+        <label for="complaint">Complaint</label>
+        <textarea id="complaint" name="complaint" rows="2" placeholder="Complaint" required aria-required="true"></textarea>
+
+        <button type="submit" aria-label="Submit Complaint">Submit Complaint</button>
+      </form>
+      <div class="success-box" id="complaint-success"></div>
+      <div class="error-box" id="complaint-error"></div>
+      <table id="tickets-table" aria-label="Complaints Ticket Table">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Complaint</th>
+            <th scope="col">Status</th>
+            <th scope="col">Icon</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Amit</td>
+            <td>amit@gmail.com</td>
+            <td>No stipend received</td>
+            <td class="status-open">Open</td>
+            <td class="icon-open"></td>
+          </tr>
+          <tr>
+            <td>Sneha</td>
+            <td>sneha@uni.in</td>
+            <td>Project stuck</td>
+            <td class="status-progress">In Progress</td>
+            <td class="icon-progress"></td>
+          </tr>
+          <tr>
+            <td>Rohan</td>
+            <td>rohan@email.com</td>
+            <td>Industry match issue</td>
+            <td class="status-resolved">Resolved</td>
+            <td class="icon-resolved"></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Real-Time Dashboard</h2>
+      <div class="dashboard-charts">
+        <div>
+          <canvas id="barChart"></canvas>
+        </div>
+        <div>
+          <canvas id="pieChart"></canvas>
+        </div>
+        <div>
+          <div id="heatmap" style="height:300px; border-radius:10px; margin-top:10px;"></div>
+
+        </div>
+        <div>
+          <canvas id="lineChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section>
+  <h2>Quota & Policy Control</h2>
+  <div class="control-panel">
+    <div class="control-group">
+      <label class="slider-label">SC Reservation %
+        <input type="range" min="0" max="50" value="15" id="scSlider" oninput="this.nextElementSibling.innerText=this.value+'%'">
+        <span>15%</span>
+      </label>
+    </div>
+    <div class="control-group">
+      <label class="slider-label">ST Reservation %
+        <input type="range" min="0" max="50" value="7" id="stSlider" oninput="this.nextElementSibling.innerText=this.value+'%'">
+        <span>7%</span>
+      </label>
+    </div>
+    <div class="control-group">
+      <label class="slider-label">OBC Reservation %
+        <input type="range" min="0" max="50" value="27" id="obcSlider" oninput="this.nextElementSibling.innerText=this.value+'%'">
+        <span>27%</span>
+      </label>
+    </div>
+    <div class="control-group">
+      <label class="slider-label">General Reservation %
+        <input type="range" min="0" max="100" value="51" id="genSlider" oninput="this.nextElementSibling.innerText=this.value+'%'">
+        <span>51%</span>
+      </label>
+    </div>
+
+    <!-- 🔹 New EWS Slider Added -->
+    <div class="control-group">
+      <label class="slider-label">EWS Reservation %
+        <input type="range" min="0" max="20" value="10" id="ewsSlider" oninput="this.nextElementSibling.innerText=this.value+'%'">
+        <span>10%</span>
+      </label>
+    </div>
+
+    <div class="control-group">
+      <label class="slider-label">Divyang Reservation %
+        <input type="range" min="0" max="20" value="5" id="divyangSlider" oninput="this.nextElementSibling.innerText=this.value+'%'">
+        <span>5%</span>
+      </label>
+    </div>
+
+    <div class="control-group">
+      <label class="slider-label">Capacity per Industry
+        <input type="range" min="50" max="500" value="200" id="capacitySlider" oninput="this.nextElementSibling.innerText=this.value">
+        <span>200</span>
+      </label>
+    </div>
+
+    <div class="control-group">
+      <label class="slider-label">First Time Participant Priority</label>
+      <label class="switch">
+        <input type="checkbox" id="prioritySwitch"><span></span>
+      </label>
+    </div>
+  </div>
+</section>
+
+
+    <section>
+      <h2>Monitoring & Reports</h2>
+      <div class="export-btns">
+        <button onclick="exportTable('unplaced-table','csv')">Download CSV</button>
+        <button onclick="showAlertBox('PDF export coming soon!','success','report-success')">Download PDF</button>
+      </div>
+      <div class="success-box" id="report-success"></div>
+      <div class="stats-cards">
+        <div class="card-stat">Monthly: 3400 Allocated</div>
+        <div class="card-stat">Quarterly: 8600 Allocated</div>
+        <div class="card-stat">Unplaced: 220</div>
+      </div>
+      <table id="unplaced-table">
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Kunal</td>
+            <td>Unplaced</td>
+          </tr>
+          <tr>
+            <td>Mira</td>
+            <td>Unplaced</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <section class="about-section">
+    <div class="about-left">
+      <h2 style="margin-top:0; font-size:1.34rem; color:white;">About Us</h2>
+      <span>
+        Skillin connects students, industries, and universities for India’s largest internship experience.<br>
+        Our platform ensures accountability, transparency, and fairness by leveraging real-time AI matching and government audit features.<br><br>
+        Through real-time dashboards and reports, the Ministry of Corporate Affairs can monitor allocations with complete transparency and accountability. Our goal is to empower and strengthen every student to get access to industry internships, and employers find the right talent at the right time.
+      </span>
+    </div>
+    <div class="about-right">
+      <div class="about-quick-links">
+       <div class="about-quick-links">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="student.html">Student</a></li>
+    <li><a href="employers.html">Employers</a></li>
+    <li><a href="university.html">University</a></li>
+    <li><a href="ai.html">AI</a></li>
+    <li><a href="admin.html">Admin</a></li>
+  </ul>
+</div>
+
+      </div>
+      <div class="about-contact">
+        <span class="contact-icon"></span>
+        <a href="mailto:skillin.portal@gmail.com">skillin.portal@gmail.com</a>
+      </div>
+    </div>
+  </section>
+
+    <footer>
+    Copyright © 2025 SkillinBot | Powered by PM Internship Smart Allocation System
+  </footer>
+
+  <script>
+    // Show alerts as inline messages not browser dialogs
+    function showAlertBox(msg,type,id='audit-success') {
+      var box = document.getElementById(id);
+      if(type==='success'){
+        box.className='success-box'; box.innerHTML=msg; box.style.display='block';
+      } else {
+        box.className='error-box'; box.innerHTML=msg; box.style.display='block';
+      }
+      setTimeout(()=>{box.style.display='none';},2200);
+    }
+
+    // Modal stubs for login/signup (demo only)
+    function showLogin(){
+      showAlertBox('Admin login coming soon here','success','audit-success');
+    }
+    function showSignup(){
+      showAlertBox('Admin signup coming soon here','success','audit-success');
+    }
+
+    // Complaint Form Handling with inline confirmation
+    document.getElementById('complaint-form').addEventListener('submit',function(e){
+      e.preventDefault();
+      document.getElementById('complaint-success').style.display='block';
+      document.getElementById('complaint-success').textContent = 'Complaint submitted';
+      setTimeout(()=>{document.getElementById('complaint-success').style.display='none';},2200);
+    });
+
+    // Chart.js Bar Chart - Category-wise Allocation
+    new Chart(document.getElementById('barChart'), {
+      type: 'bar',
+      data: {
+        labels: ['IT', 'Finance', 'Agriculture', 'Healthcare', 'Education'],
+        datasets: [{
+          label: 'Students Allocated',
+          data: [1200, 800, 600, 500, 900],
+          backgroundColor: ['#7f5aff','#ffb845','#32c87f','#6952f1','#a18ff1']
+        }]
+      },
+      options: { responsive:true, plugins: {legend:{display:false}}, scales: {y:{beginAtZero:true}} }
+    });
+
+    // Chart.js Pie Chart - Rural vs Urban
+    new Chart(document.getElementById('pieChart'), {
+      type: 'pie',
+      data: {
+        labels: ['Rural','Urban'],
+        datasets: [{
+          data: [1800,2400],
+          backgroundColor: ['#7f5aff','#32c87f']
+        }]
+      },
+      options: { responsive:true }
+    });
+
+    // Chart.js Line Chart - Top Sector Demand
+    new Chart(document.getElementById('lineChart'), {
+      type: 'line',
+      data: {
+        labels: ['Jan','Feb','Mar','Apr','May','Jun'],
+        datasets: [{
+          label: 'IT Demand',
+          data:[120,180,210,170,260,220],
+          borderColor:'#7f5aff',
+          backgroundColor:'#7f5aff44',
+          tension:0.2
+        },{
+          label:'Finance Demand',
+          data:[90,130,120,140,200,180],
+          borderColor:'#ffb845',
+          backgroundColor:'#ffb84544',
+          tension:0.2
+        }]
+      },
+      options: { responsive:true, plugins:{legend:{position:'bottom'}} }
+    });
+
+    // Export table to CSV (basic)
+    function exportTable(tableId, type){
+      if(type==='csv'){
+        let table = document.getElementById(tableId), rows = table.querySelectorAll('tr'), csv=[];
+        rows.forEach(row=>{
+          let cols = row.querySelectorAll('th,td');
+          let vals = Array.from(cols).map(c=>(c.innerText || '')).join(",");
+          csv.push(vals);
+        });
+        let content = "data:text/csv;charset=utf-8,"+encodeURIComponent(csv.join("\n"));
+        let link = document.createElement("a");
+        link.setAttribute("href",content);
+        link.setAttribute("download","report.csv");
+        document.body.appendChild(link);
+        link.click(); link.remove();
+      }
+    }
+    // Heatmap with Leaflet
+    var map = L.map('heatmap').setView([22.9734, 78.6569], 5); // India center
+
+    // Base map layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Sample heatmap data [lat, lng, intensity]
+    var heatData = [
+      [28.6139, 77.2090, 0.9],
+      [19.0760, 72.8777, 0.6],
+      [13.0827, 80.2707, 0.7],
+      [22.5726, 88.3639, 0.5],
+      [12.9716, 77.5946, 1.0],
+      [26.9124, 75.7873, 0.4],
+      [23.2599, 77.4126, 0.3]
+    ];
+
+    // Add heatmap with gradient colors
+    L.heatLayer(heatData, {
+      radius: 30,
+      blur: 18,
+      maxZoom: 10,
+      gradient: {
+        0.2: 'blue',
+        0.4: 'lime',
+        0.6: 'yellow',
+        0.8: 'orange',
+        1.0: 'red'
+      }
+    }).addTo(map);
+
+    // Add legend for heatmap
+    var legend = L.control({ position: 'bottomright' });
+
+    legend.onAdd = function (map) {
+      var div = L.DomUtil.create('div', 'info legend'),
+          grades = ["Low", "Medium", "High"],
+          colors = ["blue", "yellow", "red"];
+
+      div.innerHTML += "<h4>Allocation Intensity</h4>";
+      for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+          '<i style="background:' + colors[i] + '; width:20px; height:20px; display:inline-block; margin-right:6px;"></i> ' +
+          grades[i] + '<br>';
+      }
+      return div;
+    };
+
+    legend.addTo(map);
+
+    // Hamburger menu toggle function
+    function toggleMenu() {
+      const menu = document.getElementById('nav-menu');
+      menu.classList.toggle('active');
+    }
+    // Correcting the hamburger button event listener
+    document.getElementById('hamburger-btn').addEventListener('click', toggleMenu);
+  </script>
+</body>
+</html>

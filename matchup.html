@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jobs & Internships Matching</title>
+  <style>
+    /* ==== आपकी CSS जस की तस ==== */
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #4b2ca0, #7b3cff);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .navbar {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.7rem 2rem;
+      background: rgba(30, 24, 58, 0.92);
+      position: sticky;
+      top: 0;
+      z-index: 99;
+    }
+    .navbar .logo {
+      display: flex;
+      align-items: center;
+      font-weight: bold;
+      font-size: 1.6rem;
+      color: #fff;
+    }
+    .logo-icon {
+      display: inline-block;
+      width: 36px;
+      height: 36px;
+      margin-right: 8px;
+      background: url('images/logo.png') no-repeat center/contain;
+    }
+    .navbar .nav-links {
+      display: flex;
+      gap: 1.2rem;
+    }
+    .navbar .nav-links a, .navbar .lang-switch, .navbar .login-signup {
+      color: #e4d9d9;
+      font-size: 1.08rem;
+      padding: 0.5rem 1rem;
+      border-radius: 15px;
+      transition: background 0.23s;
+    }
+    .navbar .nav-links a:hover {
+      background: #7855db;
+      color: #fff;
+    }
+    .lang-switch {
+      background: transparent;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1.08rem;
+    }
+    .page-header {
+      color: #000;
+      text-align: center;
+      padding: 20px;
+      width: 100%;
+    }
+    .page-header h1 {
+      margin: 0;
+      font-size: 50px;
+    }
+    .page-header p {
+      margin: 5px 0 0;
+      font-size: 26px;
+      opacity: 0.9;
+    }
+    #matching {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      margin-top: 50px;
+      border-radius: 16px;
+      width: 650px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+    #matching h2 {
+      margin-bottom: 20px;
+      font-size: 26px;
+      color: #efe9f6;
+    }
+    input, select {
+      width: 90%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 15px;
+    }
+    button {
+      background: #7b3cff;
+      color: #fff;
+      padding: 12px 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+      transition: background 0.2s ease;
+    }
+    button:hover {
+      background: #9b6dff;
+    }
+    #matchResult {
+      margin-top: 20px;
+      text-align: left;
+    }
+    .opportunity-card {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .opportunity-card strong {
+      color: #ffddff;
+    }
+    .score { color: #ffe57f; }
+    .reason { font-size: 14px; opacity: 0.9; }
+    .location { font-size: 14px; color: #c5bfff; }
+    footer {
+      height: auto;
+      width: 100%;
+      background: rgba(120, 80, 240, 0.85);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
+      color: #f0e9ff;
+      margin-top: 60px;
+      padding: 40px 10vw;
+      box-sizing: border-box;
+      font-size: 15px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 30px;
+    }
+    footer section {
+      flex: 1 1 280px;
+      min-width: 220px;
+    }
+    footer h3 {
+      margin-top: 0;
+      color: #d6caff;
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 12px;
+      letter-spacing: 0.03em;
+    }
+    footer p, footer li, footer a {
+      color: #e3dbff;
+      line-height: 1.5;
+    }
+    footer ul {
+      padding-left: 1.2em;
+      margin: 0;
+      list-style-type: disc;
+    }
+    footer ul li {
+      margin-bottom: 8px;
+    }
+    footer a {
+      text-decoration: none;
+      transition: color 0.25s;
+    }
+    footer a:hover {
+      color: #fff;
+    }
+    .footer-bottom {
+      width: 100%;
+      text-align: center;
+      padding: 18px 0 10px 0;
+      font-size: 13px;
+      color: #ddd7ff;
+      background: rgba(90, 40, 180, 0.8);
+      box-shadow: inset 0 -1px 4px rgba(0,0,0,0.2);
+      letter-spacing: 0.05em;
+      margin-top: 30px;
+    }
+    @media (max-width: 850px) {
+      #career-path { width: 90%; }
+      footer { padding: 30px 5vw; font-size: 14px; }
+    }
+    @media (max-width: 480px) {
+      footer { flex-direction: column; gap: 22px; }
+      footer section { min-width: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">
+    <span class="logo-icon"></span>
+    Skillin
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="student.html">Student</a>
+    <a href="employers.html">Employers</a>
+    <a href="ai.html">AI</a>
+    <a href="university.html">University</a>
+    <a href="admin.html">Admin/Govt</a>
+  </div>
+  <button class="lang-switch"></button>
+</nav>
+
+<div class="page-header">
+  <h1>🤖 Welcome to Job & Internship matching</h1>
+  <p>Match your location preference , skills and Sectors</p>
+</div>
+
+<div id="matching">
+  <h2>Jobs & Internships Matching</h2>
+  
+  <input id="stuSkills" type="text" placeholder="Enter your skills">
+  <input id="stuState" type="text" placeholder="Enter your state">
+  <input id="stuCity" type="text" placeholder="Enter your city">
+  
+  <select id="stuSector">
+    <option value="">Select Sector Preference</option>
+    <option value="IT">IT</option>
+    <option value="Agriculture">Agriculture</option>
+    <option value="Finance">Finance</option>
+    <option value="Education">Education</option>
+  </select>
+  <br>
+  <button onclick="matchOpportunities()">Find Matches</button>
+  
+  <div id="matchResult"></div>
+</div>
+
+<footer>
+  <section>
+    <h3>About Us</h3>
+    <p>This portal utilizes AI technology to guide students toward promising career paths and internship opportunities, empowering future professionals to make informed decisions.</p>
+  </section>
+  <section>
+    <h3>Features</h3>
+    <ul>
+      <li><a href="Ai.html">Ai</a></li>
+      <li><a href="cpr.html">Career Path Recommendation</a></li>
+      <li><a href="matchup.html">Matching Up</a></li>
+      <li><a href="skillgap.html">Skill Gap Advice</a></li>
+      <li><a href="chatbot.html">Chatbot Support</a></li>
+    </ul>
+  </section>
+  <section>
+    <h3>Contact</h3>
+    <p>Email: <a href="skillin.portal@gmail.com">skillin.portal@gmail.com</a></p>
+  </section>
+  <div class="footer-bottom">
+    &copy; 2025 SkillinBot | Powered by PM Internship Smart Allocation System
+  </div>
+</footer>
+
+<script>
+/* ---------------- Autocomplete Data ---------------- */
+const states = ["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat",
+"Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra",
+"Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu",
+"Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal","Delhi","Jammu and Kashmir",
+"Ladakh","Chandigarh","Puducherry","Andaman and Nicobar Islands","Lakshadweep",
+"Dadra and Nagar Haveli and Daman and Diu"];
+
+const cities = ["Mumbai","Pune","Nagpur","Nashik","Bengaluru","Mysuru","Mangalore","Chennai","Coimbatore",
+"Madurai","Hyderabad","Warangal","Delhi","New Delhi","Kolkata","Howrah","Darjeeling","Siliguri","Lucknow",
+"Kanpur","Varanasi","Agra","Jaipur","Udaipur","Jodhpur","Patna","Ranchi","Guwahati","Shimla","Chandigarh",
+"Dehradun","Bhopal","Indore","Surat","Ahmedabad","Vadodara","Panaji","Thiruvananthapuram"];
+
+const skills = 
+  // --- Programming Languages ---
+ ["Python","Java","C","C++","C#","JavaScript","TypeScript","Ruby","PHP","Go","Swift","Kotlin","R","MATLAB",
+  "Perl","Scala","Objective-C","Dart","Shell Scripting","Rust",
+  
+  // --- Web Development ---
+  "HTML","CSS","Bootstrap","Tailwind CSS","React","Angular","Vue","Next.js","Nuxt.js","Svelte","Node.js",
+  "Express","Spring Boot","Django","Flask","Laravel","Symfony","ASP.NET","Ruby on Rails","WordPress","Shopify",
+  
+  // --- Databases & Data Tools ---
+  "SQL","MySQL","PostgreSQL","MongoDB","Oracle","SQLite","Redis","Cassandra","MariaDB","Elasticsearch","NoSQL",
+  "Hadoop","Apache Spark","Kafka","Airflow","ETL","BigQuery","Snowflake","Data Warehousing",
+  
+  // --- Cloud & DevOps ---
+  "Cloud Computing","AWS","Azure","Google Cloud","IBM Cloud","Oracle Cloud","Docker","Kubernetes","Terraform",
+  "Ansible","Jenkins","CI/CD","DevOps","Linux","Bash","Shell","Monitoring","Grafana","Prometheus",
+  
+  // --- Data Science & AI ---
+  "Machine Learning","Deep Learning","Data Science","AI","NLP","Computer Vision","Time Series Analysis",
+  "TensorFlow","PyTorch","Scikit-learn","Keras","OpenCV","Pandas","NumPy","Matplotlib","Seaborn","Data Mining",
+  
+  // --- Cybersecurity ---
+  "Cybersecurity","Networking","Penetration Testing","Ethical Hacking","Cryptography","Firewalls","SIEM",
+  "Incident Response","Vulnerability Assessment","ISO 27001","Security Auditing",
+  
+  // --- Testing & QA ---
+  "Testing","Automation","Unit Testing","Integration Testing","Selenium","Appium","Jest","Mocha","Cypress",
+  
+  // --- Project Management & Agile ---
+  "Agile","Scrum","Kanban","Waterfall","Project Management","PMP","Prince2","Jira","Trello","Asana",
+  
+  // --- APIs & Integration ---
+  "REST APIs","GraphQL","SOAP","gRPC","Microservices","System Design","Software Architecture",
+  
+  // --- Finance & Business ---
+  "Excel","Accounting","Financial Analysis","Bookkeeping","Taxation","Auditing","Investment","Trading",
+  "Budgeting","Risk Management","Cost Accounting","Economics","Business Strategy","Business Analysis",
+  "Corporate Finance","Equity Research","Financial Modelling","Venture Capital","Private Equity",
+  
+  // --- Marketing & Sales ---
+  "Digital Marketing","SEO","SEM","Google Ads","Social Media Marketing","Content Marketing","Email Marketing",
+  "Affiliate Marketing","Influencer Marketing","Copywriting","Branding","Sales","CRM","HubSpot","Salesforce",
+  
+  // --- HR & Management ---
+  "Recruitment","Talent Acquisition","HR Policies","Payroll","Employee Engagement","Compensation Management",
+  "Performance Management","Conflict Resolution","Leadership","Teamwork","Communication","Negotiation",
+  
+  // --- Agriculture ---
+  "Crop Management","Soil Testing","AgriTech","Farming","Supply Chain","Irrigation","Organic Farming",
+  "Pesticide Management","Greenhouse Farming","Fisheries","Animal Husbandry","Dairy Farming",
+  
+  // --- Healthcare ---
+  "Nursing","Patient Care","Pharmacy","Clinical Research","Medical Coding","Medical Writing","Public Health",
+  "Epidemiology","First Aid","CPR","Surgery Assistance","Nutrition","Healthcare Analytics",
+  
+  // --- Education & Training ---
+  "Teaching","Classroom Management","Curriculum Design","Educational Technology","Training","Mentoring",
+  "Coaching","E-Learning","Instructional Design","Special Education",
+  
+  // --- Engineering ---
+  "Mechanical Engineering","Civil Engineering","Electrical Engineering","Electronics","CAD","AutoCAD",
+  "SolidWorks","CATIA","Robotics","Mechatronics","Structural Analysis","HVAC","Thermodynamics",
+  
+  // --- Soft Skills ---
+  "Leadership","Time Management","Problem Solving","Critical Thinking","Adaptability","Creativity",
+  "Decision Making","Emotional Intelligence","Presentation Skills","Collaboration",
+  
+  // --- Law & Policy ---
+  "Legal Research","Contract Drafting","Corporate Law","Intellectual Property","Labour Law","Public Policy",
+  
+  // --- Miscellaneous ---
+  "Photography","Video Editing","Graphic Design","UI/UX Design","Figma","Adobe Photoshop","Illustrator",
+  "After Effects","3D Modelling","Blender","Animation","Music Production","Event Management","Logistics",
+  
+  // Add more to ensure >400
+];
+
+
+/* ---------------- Autocomplete Function ---------------- */
+function enableAutocomplete(inputId, dataList) {
+  const input = document.getElementById(inputId);
+  const suggestionBox = document.createElement("ul");
+  suggestionBox.style.cssText = `
+    border:1px solid #ccc;
+    max-height:150px;
+    overflow-y:auto;
+    margin-top:0;
+    padding-left:0;
+    list-style:none;
+    width:${input.offsetWidth}px;
+    position:absolute;
+    background:white;
+    color:black;
+    z-index:1000;
+    display:none;
+  `;
+  document.body.appendChild(suggestionBox);
+
+  function positionBox() {
+    const rect = input.getBoundingClientRect();
+    suggestionBox.style.left = rect.left + "px";
+    suggestionBox.style.top = rect.bottom + window.scrollY + "px";
+    suggestionBox.style.width = rect.width + "px";
+  }
+
+  input.addEventListener("input", () => {
+    const value = input.value.toLowerCase();
+    suggestionBox.innerHTML = "";
+    if (!value) { suggestionBox.style.display = "none"; return; }
+    const matches = dataList.filter(item => item.toLowerCase().includes(value));
+    if (matches.length === 0) { suggestionBox.style.display = "none"; return; }
+    positionBox();
+    suggestionBox.style.display = "block";
+    matches.forEach(match => {
+      const li = document.createElement("li");
+      li.textContent = match;
+      li.style.padding = "8px";
+      li.style.cursor = "pointer";
+      li.onclick = () => {
+        input.value = match;
+        suggestionBox.style.display = "none";
+      };
+      suggestionBox.appendChild(li);
+    });
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!input.contains(e.target)) suggestionBox.style.display = "none";
+  });
+}
+
+// activate autocomplete
+enableAutocomplete("stuSkills", skills);
+enableAutocomplete("stuCity", cities);
+enableAutocomplete("stuState", states);
+
+/* ---------------- Matching Logic ---------------- */
+const opportunities = [
+  { id:"I001", type:"Internship", title:"Data Analyst Intern", skills:["python","sql","excel"], sector:"IT", city:"Mumbai", state:"Maharashtra" },
+  { id:"I002", type:"Internship", title:"Frontend Developer Intern", skills:["html","css","react"], sector:"IT", city:"Delhi", state:"Delhi" },
+  { id:"I003", type:"Internship", title:"AgriTech Research Intern", skills:["data analysis","excel"], sector:"Agriculture", city:"Patna", state:"Bihar" },
+  { id:"J001", type:"Job", title:"Junior Backend Developer", skills:["java","spring","mysql"], sector:"IT", city:"Bengaluru", state:"Karnataka" },
+  { id:"J002", type:"Job", title:"Finance Associate", skills:["excel","accounting"], sector:"Finance", city:"Jaipur", state:"Rajasthan" },
+  { id:"J003", type:"Job", title:"School IT Coordinator", skills:["networking","troubleshooting"], sector:"Education", city:"Lucknow", state:"Uttar Pradesh" }
+];
+
+function skillMatch(studentSkills, reqSkills){
+  const A = new Set(studentSkills.map(s => s.toLowerCase()));
+  const inter = reqSkills.filter(r => A.has(r.toLowerCase())).length;
+  return reqSkills.length ? inter / reqSkills.length : 0;
+}
+
+function computeScore(student, opp){
+  let score = 0, reasons = [];
+  const wSkill = 0.6, wSector = 0.2, wLocation = 0.2;
+  const sSkill = skillMatch(student.skills, opp.skills);
+  score += sSkill * wSkill * 100;
+  reasons.push(`Skills matched: ${Math.round(sSkill*100)}%`);
+  if(student.sectorPref === opp.sector){
+    score += wSector * 100;
+    reasons.push("Sector preference match ✅");
+  }
+  if(student.city.toLowerCase() === opp.city.toLowerCase() || student.state.toLowerCase() === opp.state.toLowerCase()){
+    score += wLocation * 100;
+    reasons.push("Location match ✅");
+  }
+  return { score: Math.round(score), reasons };
+}
+
+function matchOpportunities(){
+  const student = {
+    skills: document.getElementById("stuSkills").value.toLowerCase().split(",").map(s=>s.trim()).filter(Boolean),
+    city: document.getElementById("stuCity").value.trim(),
+    state: document.getElementById("stuState").value.trim(),
+    sectorPref: document.getElementById("stuSector").value
+  };
+  const scored = opportunities.map(o => {
+    const { score, reasons } = computeScore(student, o);
+    return { ...o, score, reasons };
+  });
+  scored.sort((a,b) => b.score - a.score);
+  const top3 = scored.slice(0,3);
+  let html = "";
+  top3.forEach(o => {
+    html += `
+      <div class="opportunity-card">
+        <strong>🏢 ${o.type}:</strong> ${o.title}<br>
+        <span class="location">📍 ${o.city}, ${o.state}</span><br>
+        <strong class="score">🎯 Score:</strong> ${o.score}/100<br>
+        <div class="reason">💡 Why: ${o.reasons.join(", ")}</div>
+      </div>
+    `;
+  });
+  document.getElementById("matchResult").innerHTML = html;
+}
+// 🔑 Enter key trigger for Find Matches
+document.addEventListener("keypress", function(e) {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    matchOpportunities();
+  }
+});
+
+</script>
+
+</body>
+</html>
